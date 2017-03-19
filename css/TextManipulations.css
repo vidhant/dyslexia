@@ -1,15 +1,64 @@
-.leftToRight
-{
-	direction: rtl; /* Hello my name is Vidhant becomes */
-}
-
 .mirrorTheLetters
 {
 	webkit-transform:rotateY(180deg);
-	  -moz-transform:rotateY(180deg);
-	  -o-transform:rotateY(180deg);
-	  -ms-transform:rotateY(180deg);
-	  unicode-bidi:bidi-override;
+	-moz-transform:rotateY(180deg);
+	-o-transform:rotateY(180deg);
+	-ms-transform:rotateY(180deg);
+	unicode-bidi:bidi-override;
+}
+
+.upsideDown
+{
+	webkit-transform:rotateX(180deg);
+	-moz-transform:rotateX(180deg);
+	-o-transform:rotateX(180deg);
+	-ms-transform:rotateX(180deg);
+	unicode-bidi:bidi-override;
+}
+
+.blur
+{
+   color: transparent;
+   text-shadow: 0 0 1.5px rgba(0,0,0,0.5);
+   zoom: 150%;
+}
+
+.zoom
+{
+	-moz-transform: scale(1.5); /* Firefox */
+	moz-transform-origin: 0 0;
+}
+
+.bounce 
+{
+	 animation: bounce 1s infinite;
+	 -webkit-animation: bounce 1s infinite;
+	 -moz-animation: bounce 1s infinite;
+	 -o-animation: bounce 1s infinite;
+}
+ 
+@-webkit-keyframes bounce 
+{
+	 0%, 100% {-webkit-transform: translate3d(0px, 0px, 0px);}
+	 50% {-webkit-transform: translate3d(0px, -10px, 0px);}
+}
+ 
+@-moz-keyframes bounce
+{
+	 0%, 100% {-moz-transform: translate3d(0px, 0px, 0px);}
+	 50% {-moz-transform: translate3d(0px, -10px, 0px);}
+}
+ 
+@-o-keyframes bounce
+{
+	 0%, 100% {-o-transform: translate3d(0px, 0px, 0px);}
+	 50% {-o-transform: translate3d(0px, -10px, 0px);}
+}
+
+@keyframes bounce 
+{
+ 	0%, 100% {transform: translate3d(0px, 0px, 0px);}
+ 	50% {transform: translate3d(0px, -10px, 0px);}
 }
 
 /*
