@@ -3,30 +3,55 @@
 	<title></title>
 	<style>
 		.flip 
+		{		
+
+		}
+		.blur {		
+   color: transparent;
+   text-shadow: 0 0 1.5px rgba(0,0,0,0.75);
+-moz-transform: scale(1.5); /* Firefox */
+-moz-transform-origin: 0 0;
+}
+
+		.bounce 
 		{
-/*			[dir='ltr'], [dir='rtl'] { 
-	unicode-bidi: -webkit-isolate;
-	unicode-bidi: -moz-isolate;
-	unicode-bidi: -ms-isolate;
-	unicode-bidi: isolate;
-	} 
-bdo[dir='ltr'], bdo[dir='rtl'] {
-	unicode-bidi: bidi-override; 
-	unicode-bidi: -webkit-isolate-override; 
-	unicode-bidi: -moz-isolate-override; 
-	unicode-bidi: -ms-isolate-override; 
-	unicode-bidi: isolate-override;
-  	}
-direction:rtl;*/
+			 animation: bounce 1s infinite;
+			 -webkit-animation: bounce 1s infinite;
+			 -moz-animation: bounce 1s infinite;
+			 -o-animation: bounce 1s infinite;
+		}
+		 
+		@-webkit-keyframes bounce 
+		{
+			 0%, 100% {-webkit-transform: translate3d(0px, 0px, 0px);}
+			 50% {-webkit-transform: translate3d(0px, -10px, 0px);}
+		}
+		 
+		@-moz-keyframes bounce
+		{
+			 0%, 100% {-moz-transform: translate3d(0px, 0px, 0px);}
+			 50% {-moz-transform: translate3d(0px, -10px, 0px);}
+		}
+		 
+		@-o-keyframes bounce
+		{
+			 0%, 100% {-o-transform: translate3d(0px, 0px, 0px);}
+			 50% {-o-transform: translate3d(0px, -10px, 0px);}
+		}
+
+		@keyframes bounce 
+		{
+		 	0%, 100% {transform: translate3d(0px, 0px, 0px);}
+		 	50% {transform: translate3d(0px, -10px, 0px);}
 		}
 	</style>
 
 </head>
-<body  class="flip">
+<body  class="bounce">
 	<p>
 	My name is Vidhant Maini!
 	</p>
-	<p>
+	<p class="flip">
 		Hello <bdo dir="rtl">my name is Vidhant.</bdo>
 	</p>
 </body>

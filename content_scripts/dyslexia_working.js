@@ -149,8 +149,8 @@ catch(err)
 		b) Similar shape but different orientation : b, p, d, q
 
 2. Some letters backwards or upside down.
-		a) Backwards - Done
-		b) Upside down
+		a) Backwards -- Done
+		b) Upside down -- Done
 
 3. Some words totally backwards - bird as drib. -- Done
 
@@ -160,7 +160,13 @@ catch(err)
 			ii) Once -- 
 		c) CSS -- 
 
-5. Faded/Zoomed under a magnifying glass effect.
+5. Faded/Zoomed under a magnifying glass effect -- 
+
+6. Jumping words -- Done
+
+7. Flickering words -- 
+
+8. Blurred words -- Done
 
 
 */
