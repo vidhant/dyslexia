@@ -1,0 +1,17 @@
+.leftToRight
+{
+	direction: rtl; /* Hello my name is Vidhant becomes */
+}
+
+.mirrorTheLetters
+{
+	webkit-transform:rotateY(180deg);
+	  -moz-transform:rotateY(180deg);
+	  -o-transform:rotateY(180deg);
+	  -ms-transform:rotateY(180deg);
+	  unicode-bidi:bidi-override;
+}
+
+/*
+For "My name is Vidhant." to become ".tnahdiV si eman ym", use "<bdo dir="rtl">My name is Vidhant.</bdo>""
+*/

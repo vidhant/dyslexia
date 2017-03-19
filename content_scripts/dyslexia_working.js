@@ -12,7 +12,8 @@ try
 
           if(isEnabled)
           {
-            flicker(runAfterXMilliseconds)
+            flicker(runAfterXMilliseconds);
+            mirror();
           }
       });
 
@@ -141,9 +142,25 @@ catch(err)
 // Total number of times to run flicker.
 // What is the maximum size of text node to animate.
 
-// Modes:
-// 1. LetterAnamoly: similar shaped letters o,e,c | similar shape but different orientation : b, p, d, q
-// 2. Some letters backwards or upside down.
-// 3. Some words totally backwards - bird as drib.
-// 4. The letters might look all jumbled up and out of order.
-// 5. Jumble up the words and shuffle each of them just once (Change the DOM only once) -- But then what DOM does the ROL script get? I think a different one?
+/* Modes:
+
+1. Similar shaped letters.
+		a) Similar shaped letters o,e,c
+		b) Similar shape but different orientation : b, p, d, q
+
+2. Some letters backwards or upside down.
+		a) Backwards - Done
+		b) Upside down
+
+3. Some words totally backwards - bird as drib. -- Done
+
+4. The letters might look all jumbled up and out of order.
+		a) JS - 
+			i) Continually -- Done
+			ii) Once -- 
+		c) CSS -- 
+
+5. Faded/Zoomed under a magnifying glass effect.
+
+
+*/
