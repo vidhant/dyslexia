@@ -13,6 +13,9 @@
   "content_scripts": [{
       "matches": ["<all_urls>"],
       "all_frames": false,
-      "js": ["content_scripts/jquery-3.2.0.min", "content_scripts/dyslexia_working.js"]
+      "js": ["content_scripts/jquery-3.2.0.min", "content_scripts/dyslexia_working.js"],
+      "css": ["css/TextManipulations.css"]
   }]
+
+
 }

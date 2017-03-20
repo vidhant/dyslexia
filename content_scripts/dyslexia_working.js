@@ -60,10 +60,11 @@ try
         try
         {
             console.log("injectCSS");
+            console.log("Head html is : '" + $('head').html() + "'");
             if (!$('link[href="' + url + '"]').length)
             {
-                $('head').text($('head').text() + '<link rel="stylesheet" type="text/css" href="' + url + '" type="text/css" />');
-                //console.log($('head').text());
+                $('head').html($('head').html() + '<link rel="stylesheet" type="text/css" href="' + url + '" type="text/css" />');
+                console.log("Head html is : '" + $('head').html() + "'");
             }
             //$('head').append('<link rel="stylesheet" href="css/TextManipulations.css" type="text/css" />');
         }
