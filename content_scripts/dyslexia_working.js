@@ -85,13 +85,20 @@ try
                 var cssRules;
                 if (css === "any")
                 {
-                    cssRules = ["mirrorTheLetters", "upsideDown", "blur", "zoom", "bounce"];
+                    cssRules = ["mirrorTheLetters", "upsideDown", "blur", "zoom", "bounce", "zoomInZoomOut"];
                     css = cssRules[getRandomInt(0, cssRules.length - 1)];
                 }
 
                 var span = document.createElement("span");
                 span.className = css + " inTheSameLine";
-                span.textContent = word + " ";
+                if(css === "mirrorTheLetters")
+                {
+                	span.textContent = " " + word;
+                }
+                else
+                {
+					span.textContent = word + " ";                	
+                }
 
                 return span;
 
@@ -194,14 +201,14 @@ try
                         }
                     };
 
-                    var childNumberOfThisNode = 0;
+                    var whichChildIsThisTextNode = 0;
                     var currentNodeIterator = node;
                     while ((currentNodeIterator = currentNodeIterator.previousSibling) != null)
                     {
-                        childNumberOfThisNode++;
+                        whichChildIsThisTextNode++;
                     }
 
-                    console.log("Child number for this text node is : " + childNumberOfThisNode);
+                    console.log("This text node is the nth child of it's parent, where n = " + whichChildIsThisTextNode);
 
                     for (var j = 0; j < nodeSet.length; j++)
                     {
@@ -223,8 +230,13 @@ try
 
                     console.log("NEW Child number for this text node is : " + newChildNumber);
 
+                    if(newChildNumber!=whichChildIsThisTextNode+nodeSet.length)
+                    {
+                    	block("Deleting the incorrect element");
+                    }
+
                     console.log("Removing the node : " + node.parentNode.childNodes[newChildNumber].innerHTML);
-                    node.parentNode.removeChild(node.parentNode.childNodes[childNumberOfThisNode + nodeSet.length]);
+                    node.parentNode.removeChild(node.parentNode.childNodes[whichChildIsThisTextNode + nodeSet.length]);
 
                     console.log($('p')[0].innerHTML);
                     console.log($('p')[1].innerHTML);
@@ -388,6 +400,11 @@ try
     function getRandomInt(min, max)
     {
         return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    function block(message)
+    {
+    	document.getElementsByTagName("body")[0].innerHTML = "<div style='font-size : 100px; color: red;'>Blocked by : '" + message + "'</div>";
     }
 }
 
