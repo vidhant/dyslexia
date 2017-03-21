@@ -23,7 +23,7 @@ try
 
     /* css Animations */
     var isCSSAnimationOn = true;
-    var sessionKey = getRandomInt(0,99999999);
+    var sessionKey = getRandomInt(0, 99999999);
 
     $(function main()
     {
@@ -42,7 +42,7 @@ try
             }
 
 
-            setTimeout(reset, 5000);
+            //setTimeout(reset, 5000);
         }
         catch (err)
         {
@@ -96,13 +96,13 @@ try
                 var span = document.createElement("span");
                 span.className = css + " inTheSameLine";
                 span.setAttribute("name", sessionKey);
-                if(css === "mirrorTheLetters")
+                if (css === "mirrorTheLetters")
                 {
-                	span.textContent = " " + word;
+                    span.textContent = " " + word;
                 }
                 else
                 {
-					span.textContent = word + " ";                	
+                    span.textContent = word + " ";
                 }
 
                 return span;
@@ -201,7 +201,7 @@ try
                             {
                                 var textNode = document.createTextNode(word + " ");
                                 nodeSet.push(textNode);
-                                
+
                             }
                         }
                     };
@@ -235,9 +235,9 @@ try
 
                     console.log("NEW Child number for this text node is : " + newChildNumber);
 
-                    if(newChildNumber!=whichChildIsThisTextNode+nodeSet.length)
+                    if (newChildNumber != whichChildIsThisTextNode + nodeSet.length)
                     {
-                    	block("Deleting the incorrect element");
+                        block("Deleting the incorrect element");
                     }
 
                     console.log("Removing the node : " + node.parentNode.childNodes[newChildNumber].innerHTML);
@@ -409,34 +409,34 @@ try
 
     function block(message)
     {
-    	document.getElementsByTagName("body")[0].innerHTML = "<div style='font-size : 100px; color: red;'>Blocked by : '" + message + "'</div>";
+        document.getElementsByTagName("body")[0].innerHTML = "<div style='font-size : 100px; color: red;'>Blocked by : '" + message + "'</div>";
     }
 
     function reset()
     {
-    	try
-    	{
-    		var mirroredNodes = document.getElementsByClassName("mirrorTheLetters");
-    		for(var nodeNumber = mirroredNodes.length - 1; nodeNumber >= 0; nodeNumber--)
-    		{
-    			mirroredNodes[nodeNumber].innerText = mirroredNodes[nodeNumber].innerText.trim() + " ";
-    			mirroredNodes[nodeNumber].className = "";
-    		}
+        try
+        {
+            var mirroredNodes = document.getElementsByClassName("mirrorTheLetters");
+            for (var nodeNumber = mirroredNodes.length - 1; nodeNumber >= 0; nodeNumber--)
+            {
+                mirroredNodes[nodeNumber].innerText = mirroredNodes[nodeNumber].innerText.trim() + " ";
+                mirroredNodes[nodeNumber].className = "";
+            }
 
-    		var listOfNodesAdded = document.getElementsByName(sessionKey);
-    		console.log("Total nodes to be removed : " + listOfNodesAdded.length);
+            var listOfNodesAdded = document.getElementsByName(sessionKey);
+            console.log("Total nodes to be removed : " + listOfNodesAdded.length);
 
-    		for(var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
-    		{
-    			listOfNodesAdded[nodeNumber].className = "";
-    		}
-    	}
-    	catch (err)
-		{
-			block(err.message);
-		    console.log("Error reset.!");
-		    console.log(err.message);
-		}
+            for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
+            {
+                listOfNodesAdded[nodeNumber].className = "";
+            }
+        }
+        catch (err)
+        {
+            block(err.message);
+            console.log("Error reset.!");
+            console.log(err.message);
+        }
     }
 }
 
