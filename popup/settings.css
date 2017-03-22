@@ -1,0 +1,27 @@
+html, body {
+  width: 100px;
+}
+
+.button {
+  margin: 3% auto;
+  padding: 4px;
+  text-align: center;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+.mode:hover {
+  background-color: #CFF2F2;
+}
+
+.mode {
+ background-color: #E5F2F2;
+}
+
+.reset {
+ background-color: #FBFBC9;
+}
+
+.clear:hover {
+ background-color: #EAEAC9;
+}
