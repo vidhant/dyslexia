@@ -36,6 +36,11 @@ try
             {
                 console.log("Clearing stuff");
                 reset();
+                            if(document.getElementsByTagName("p")[0]!=undefined)
+            {
+            	console.log(document.getElementsByTagName("p")[0].innerHTML);
+            }
+
                 return;
             }
             if (isFlickerAnimationOn)
@@ -61,7 +66,7 @@ try
             console.log("Error in : main!");
             console.log(err.message);
         }
-        browser.runtime.onMessage.removeListener(main);
+        //browser.runtime.onMessage.removeListener(main);
     }
 
     function getTextNodesIn(el)
@@ -253,7 +258,7 @@ try
                         block("Deleting the incorrect element");
                     }
 
-                    console.log("Removing the node : " + node.parentNode.childNodes[newChildNumber].innerHTML);
+                    console.log("Removing the node : " + node.parentNode.childNodes[newChildNumber].innerText);
                     node.parentNode.removeChild(node.parentNode.childNodes[whichChildIsThisTextNode + nodeSet.length]);
 
                     //node.parentNode.removeChild(node);
@@ -439,8 +444,20 @@ try
 
             for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
             {
-                listOfNodesAdded[nodeNumber].className = "";
+            	console.log(nodeNumber);
+            	var innerTextNode = document.createTextNode(listOfNodesAdded[nodeNumber].innerText);
+            	console.log("Create the text node");
+            	//listOfNodesAdded[nodeNumber].innerText);
+            	listOfNodesAdded[nodeNumber].parentNode.insertBefore(innerTextNode, listOfNodesAdded[nodeNumber]);
+            	console.log("Create and appended: " + innerTextNode.textContent);
             }
+
+            for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
+            {
+
+            	listOfNodesAdded[nodeNumber].remove();
+            }
+
         }
         catch (err)
         {
