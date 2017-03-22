@@ -1,17 +1,18 @@
 {
-  "author": "Vidhant Maini",
-  "description": "How does the web appear to a dyslexic?",
+  "author":  "Vidhant Maini",
+  "manifest_version": 2,
   "name": "Dyslexia",
   "version": "1.0",
+
+  "description": "How does the web appear to a dyslexic?",
   "icons": {
     "48": "icons/beasts-48.png"
   },
-  "content_scripts": [
-    {
-      "matches": [ "<all_urls>" ],
+
+  "content_scripts": [{
+      "matches": ["<all_urls>"],
       "all_frames": false,
-      "js": [ "content_scripts/jquery-3.2.0.min", "content_scripts/dyslexia_working.js" ],
-      "css": [ "css/TextManipulations.css" ]
-    }
-  ]
+      "js": ["content_scripts/jquery-3.2.0.min", "content_scripts/dyslexia_working.js"],
+      "css": ["css/TextManipulations.css"]
+  }]
 }
