@@ -27,18 +27,20 @@ try
     var isCSSAnimationOn = true;
     var sessionKey = getRandomInt(0, 99999999);
 
+    var isLoggingOn = true;
+
     function main(request, sender, sendResponse)
     {
         try
         {
-            console.log("Main");
+            LogToConsole("Main");
             if (request.mode === "clear")
             {
-                console.log("Clearing stuff");
+                LogToConsole("Clearing stuff");
                 reset();
                             if(document.getElementsByTagName("p")[0]!=undefined)
             {
-            	console.log(document.getElementsByTagName("p")[0].innerHTML);
+            	LogToConsole(document.getElementsByTagName("p")[0].innerHTML);
             }
 
                 return;
@@ -56,15 +58,14 @@ try
 
             if(document.getElementsByTagName("p")[0]!=undefined)
             {
-            	console.log(document.getElementsByTagName("p")[0].innerHTML);
+            	LogToConsole(document.getElementsByTagName("p")[0].innerHTML);
             }
 
             //setTimeout(reset, 5000);
         }
         catch (err)
         {
-            console.log("Error in : main!");
-            console.log(err.message);
+            Block("Error in : main!" + err.message);
         }
         //browser.runtime.onMessage.removeListener(main);
     }
@@ -81,19 +82,18 @@ try
     {
         try
         {
-            console.log("injectCSS");
-            console.log("Head html is : '" + $('head').html() + "'");
+            LogToConsole("injectCSS");
+            LogToConsole("Head html is : '" + $('head').html() + "'");
             if (!$('link[href="' + url + '"]').length)
             {
                 $('head').html($('head').html() + '<link rel="stylesheet" type="text/css" href="' + url + '" type="text/css" />');
-                //console.log("Head html is : '" + $('head').html() + "'");
+                //LogToConsole("Head html is : '" + $('head').html() + "'");
             }
             //$('head').append('<link rel="stylesheet" href="css/TextManipulations.css" type="text/css" />');
         }
         catch (err)
         {
-            console.log("Error in : injectingCSS!");
-            console.log(err.message);
+            Block("Error in : injectingCSS!" + err.message);
         }
     }
 
@@ -103,7 +103,7 @@ try
         {
             if (isCSSAnimationOn === true)
             {
-                console.log("Applying css to: '" + word + "'");
+                LogToConsole("Applying css to: '" + word + "'");
                 var cssRules;
                 if (css === "any")
                 {
@@ -132,9 +132,8 @@ try
         }
         catch (err)
         {
-            console.log("Error in : applyingCSS!");
-            console.log(err.message);
-        }
+            Block("Error in : applyingCSS!" + err.message);
+  		}
 
         return null;
     }
@@ -162,7 +161,7 @@ try
                     while ((match = re.exec(node.nodeValue)) != null)
                     {
                         var word = match[0];
-                        //console.log("Word is : " + word);
+                        //LogToConsole("Word is : " + word);
                         var position = match.index;
 
                         words.push({
@@ -177,11 +176,11 @@ try
 
             function applyAnimations()
             {
-                console.log("Applying CSS Animations. Total textnodes are : " + textNodes.length);
+                LogToConsole("Applying CSS Animations. Total textnodes are : " + textNodes.length);
 
                 for (var i = 0; i < textNodes.length; i++)
                 {
-                    console.log("Node : " + i + " is : '" + textNodes[i].textContent + "'");
+                    LogToConsole("Node : " + i + " is : '" + textNodes[i].textContent + "'");
                 }
 
                 for (var i = 0; i < textNodes.length; i++)
@@ -196,12 +195,12 @@ try
                         var before = node.nodeValue.slice(0, wordMeta.position);
                         var after = node.nodeValue.slice(wordMeta.position + wordMeta.length);
 
-                        console.log("Word : " + word);
-                        console.log("Before: " + before);
-                        console.log("After: " + after);
+                        LogToConsole("Word : " + word);
+                        LogToConsole("Before: " + before);
+                        LogToConsole("After: " + after);
 
-                        console.log("**********");
-                        console.log("Node value WAS : " + node.nodeValue);
+                        LogToConsole("**********");
+                        LogToConsole("Node value WAS : " + node.nodeValue);
 
                         if (Math.random() < 1 / 5)
                         {
@@ -231,17 +230,17 @@ try
                         whichChildIsThisTextNode++;
                     }
 
-                    console.log("This text node is the nth child of it's parent, where n = " + whichChildIsThisTextNode);
+                    LogToConsole("This text node is the nth child of it's parent, where n = " + whichChildIsThisTextNode);
 
                     for (var j = 0; j < nodeSet.length; j++)
                     {
                         if (nodeSet[j].nodeType === 3)
                         {
-                            console.log("Well, this is a text node");
+                            LogToConsole("Well, this is a text node");
                         }
-                        console.log("Appending : " + nodeSet[j].innerHTML);
+                        LogToConsole("Appending : " + nodeSet[j].innerHTML);
                         node.parentNode.insertBefore(nodeSet[j], node);
-                        console.log("Now, parent has total nodes : " + node.parentNode.childNodes.length);
+                        LogToConsole("Now, parent has total nodes : " + node.parentNode.childNodes.length);
                     }
 
                     currentNodeIterator = node;
@@ -251,14 +250,14 @@ try
                         newChildNumber++;
                     }
 
-                    console.log("NEW Child number for this text node is : " + newChildNumber);
+                    LogToConsole("NEW Child number for this text node is : " + newChildNumber);
 
                     if (newChildNumber != whichChildIsThisTextNode + nodeSet.length)
                     {
-                        block("Deleting the incorrect element");
+                        Block("Deleting the incorrect element");
                     }
 
-                    console.log("Removing the node : " + node.parentNode.childNodes[newChildNumber].innerText);
+                    LogToConsole("Removing the node : " + node.parentNode.childNodes[newChildNumber].innerText);
                     node.parentNode.removeChild(node.parentNode.childNodes[whichChildIsThisTextNode + nodeSet.length]);
 
                     //node.parentNode.removeChild(node);
@@ -270,8 +269,7 @@ try
         }
         catch (err)
         {
-            console.log("Error in : applyCSSAnimation()!");
-            console.log(err.message);
+            Block("Error in : applyCSSAnimation()!" + err.message);
         }
     }
 
@@ -279,7 +277,7 @@ try
     {
         try
         {
-            console.log("Flicker called!!");
+            LogToConsole("Flicker called!!");
             var textNodes;
             var wordsInTextNodes = [];
 
@@ -298,7 +296,7 @@ try
                     var match;
                     while ((match = re.exec(node.nodeValue)) != null)
                     {
-                        //console.log("Word is : " + word);
+                        //LogToConsole("Word is : " + word);
                         var word = match[0];
                         var position = match.index;
 
@@ -314,10 +312,10 @@ try
 
             function messUpWords()
             {
-                console.log("Messing it. Total textnodes are : " + textNodes.length);
+                LogToConsole("Messing it. Total textnodes are : " + textNodes.length);
                 for (var i = 0; i < textNodes.length; i++)
                 {
-                    console.log("Node : " + i + " is : '" + textNodes[i].textContent + "'");
+                    LogToConsole("Node : " + i + " is : '" + textNodes[i].textContent + "'");
                 }
                 for (var i = 0; i < textNodes.length; i++)
                 {
@@ -325,14 +323,14 @@ try
                     var node = textNodes[i];
                     for (var j = 0; j < wordsInTextNodes[i].length; j++)
                     {
-                        console.log("Node to be tripped is : " + textNodes[i].textContent);
-                        console.log("Word to be tripped is : " + wordsInTextNodes[i][j]);
+                        LogToConsole("Node to be tripped is : " + textNodes[i].textContent);
+                        LogToConsole("Word to be tripped is : " + wordsInTextNodes[i][j]);
                         if (Math.random() < 1 / 5)
                         {
                             continue;
                         }
 
-                        console.log("Tripping it now.");
+                        LogToConsole("Tripping it now.");
 
                         var wordMeta = wordsInTextNodes[i][j];
 
@@ -340,25 +338,25 @@ try
                         var before = node.nodeValue.slice(0, wordMeta.position);
                         var after = node.nodeValue.slice(wordMeta.position + wordMeta.length);
 
-                        console.log("Word : " + word);
-                        console.log("Before: " + before);
-                        console.log("After: " + after);
+                        LogToConsole("Word : " + word);
+                        LogToConsole("Before: " + before);
+                        LogToConsole("After: " + after);
 
-                        console.log("**********");
-                        console.log("Node value WAS : " + node.nodeValue);
+                        LogToConsole("**********");
+                        LogToConsole("Node value WAS : " + node.nodeValue);
                         var animatedWord = messUpWord(word);
-                        console.log("----------------------------------Animated word is : " + animatedWord);
+                        LogToConsole("----------------------------------Animated word is : " + animatedWord);
                         node.nodeValue = before + animatedWord + after;
 
-                        console.log("**********");
-                        console.log("Node value IS : " + node.nodeValue);
+                        LogToConsole("**********");
+                        LogToConsole("Node value IS : " + node.nodeValue);
                     };
                 };
             }
 
             function messUpWord(word)
             {
-                console.log("messUpWord called for : " + word);
+                LogToConsole("messUpWord called for : " + word);
                 if (word.length < 3)
                 {
 
@@ -404,7 +402,7 @@ try
                 }
                 else
                 {
-                    console.log("Exhausted the number of allowed mess ups");
+                    LogToConsole("Exhausted the number of allowed mess ups");
                 }
             }
 
@@ -412,9 +410,7 @@ try
         }
         catch (err)
         {
-            console.log("Error in : animating!");
-            console.log(err.message);
-        }
+            Block("Error in : animating!" + err.message);        }
     }
 
     // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
@@ -423,9 +419,12 @@ try
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
-    function block(message)
+    function Block(message)
     {
-        document.getElementsByTagName("body")[0].innerHTML = "<div style='font-size : 100px; color: red;'>Blocked by : '" + message + "'</div>";
+    	if(isLoggingOn)
+    	{
+        	document.getElementsByTagName("body")[0].innerHTML = "<div style='font-size : 100px; color: red;'>Blocked by : '" + message + "'</div>";
+        }
     }
 
     function reset()
@@ -440,16 +439,16 @@ try
             }
 
             var listOfNodesAdded = document.getElementsByName(sessionKey);
-            console.log("Total nodes to be removed : " + listOfNodesAdded.length);
+            LogToConsole("Total nodes to be removed : " + listOfNodesAdded.length);
 
             for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
             {
-            	console.log(nodeNumber);
+            	LogToConsole(nodeNumber);
             	var innerTextNode = document.createTextNode(listOfNodesAdded[nodeNumber].innerText);
-            	console.log("Create the text node");
+            	LogToConsole("Create the text node");
             	//listOfNodesAdded[nodeNumber].innerText);
             	listOfNodesAdded[nodeNumber].parentNode.insertBefore(innerTextNode, listOfNodesAdded[nodeNumber]);
-            	console.log("Create and appended: " + innerTextNode.textContent);
+            	LogToConsole("Create and appended: " + innerTextNode.textContent);
             }
 
             for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
@@ -461,18 +460,23 @@ try
         }
         catch (err)
         {
-            block(err.message);
-            console.log("Error reset.!");
-            console.log(err.message);
+            Block("Error in reset() " + err.message);
         }
     }
 }
 
 catch (err)
 {
-    console.log("Error somewhere.!");
-    console.log(err.message);
+    Block("Error somewhere in js!" + err.message);
 }
+
+    function LogToConsole(message)
+    {
+    	if(isLoggingOn)
+    	{
+    		console.log(message);
+    	}
+    }
 
 // Total number of times to run flicker.
 // What is the maximum size of text node to animate.
