@@ -49,6 +49,10 @@ try
                 applyCSSAnimations(request.mode);
             }
 
+            if(document.getElementsByTagName("p")[0]!=undefined)
+            {
+            	console.log(document.getElementsByTagName("p")[0].innerHTML);
+            }
 
             //setTimeout(reset, 5000);
         }
@@ -98,7 +102,7 @@ try
                 var cssRules;
                 if (css === "any")
                 {
-                    cssRules = ["mirrorTheLetters", "upsideDown", "blur", "zoom", "bounce", "zoomInZoomOut"];
+                    cssRules = ["mirrorTheLetters", "upsideDown", "blur", "zoom", "bounce", "zoomInZoomOut", "bounceAndZoomInZoomOut"];
                     css = cssRules[getRandomInt(0, cssRules.length - 1)];
                 }
 
@@ -491,6 +495,7 @@ a) Punctuations.
 b) Spacing.
 c) Not working for some URLs on Edge
 
+11. Add - random bounce
 
 */
 
