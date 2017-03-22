@@ -68,7 +68,7 @@ try
             if (!$('link[href="' + url + '"]').length)
             {
                 $('head').html($('head').html() + '<link rel="stylesheet" type="text/css" href="' + url + '" type="text/css" />');
-                console.log("Head html is : '" + $('head').html() + "'");
+                //console.log("Head html is : '" + $('head').html() + "'");
             }
             //$('head').append('<link rel="stylesheet" href="css/TextManipulations.css" type="text/css" />');
         }
@@ -139,12 +139,12 @@ try
 
                     var words = []
 
-                    var re = /\w+/g;
+                    var re = /\w+\W*/g;
                     var match;
                     while ((match = re.exec(node.nodeValue)) != null)
                     {
-                        //console.log("Word is : " + word);
                         var word = match[0];
+                        //console.log("Word is : " + word);
                         var position = match.index;
 
                         words.push({
@@ -243,8 +243,6 @@ try
                     console.log("Removing the node : " + node.parentNode.childNodes[newChildNumber].innerHTML);
                     node.parentNode.removeChild(node.parentNode.childNodes[whichChildIsThisTextNode + nodeSet.length]);
 
-                    console.log($('p')[0].innerHTML);
-                    console.log($('p')[1].innerHTML);
                     //node.parentNode.removeChild(node);
                 };
             }
@@ -476,6 +474,14 @@ catch (err)
 8. Blurred words -- Done
 
 9. Whole content, reading units -- With a moving, hovering zoom/blur --
+
+
+10. Issues:
+
+a) Punctuations.
+b) Spacing.
+c) Not working for some URLs on Edge
+
 
 */
 
