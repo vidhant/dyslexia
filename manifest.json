@@ -1,5 +1,5 @@
 {
-  "author":  "Vidhant Maini",
+  "author": "Vidhant Maini",
   "manifest_version": 2,
   "name": "Dyslexia",
   "version": "1.0",
@@ -9,10 +9,18 @@
     "48": "icons/beasts-48.png"
   },
 
-  "content_scripts": [{
-      "matches": ["<all_urls>"],
+  "browser_action": {
+    "default_icon": "icons/beasts-32.png",
+    "default_title": "Dyslexicize",
+    "default_popup": "popup/settings.html"
+  },
+
+  "content_scripts": [
+    {
+      "matches": [ "<all_urls>" ],
       "all_frames": false,
-      "js": ["content_scripts/jquery-3.2.0.min", "content_scripts/dyslexia_working.js"],
-      "css": ["css/TextManipulations.css"]
-  }]
+      "js": [ "content_scripts/jquery-3.2.0.min", "content_scripts/dyslexia_working.js" ],
+      "css": [ "css/TextManipulations.css" ]
+    }
+  ]
 }
