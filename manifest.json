@@ -1,11 +1,10 @@
 {
-
+  "author":  "Vidhant Maini",
   "manifest_version": 2,
   "name": "Dyslexia",
   "version": "1.0",
 
   "description": "How does the web appear to a dyslexic?",
-  "homepage_url": "https://github.com/vidhant/dyslexia",
   "icons": {
     "48": "icons/beasts-48.png"
   },
