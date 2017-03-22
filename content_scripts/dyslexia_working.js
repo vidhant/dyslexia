@@ -18,10 +18,8 @@ try
     browser.runtime.onMessage.addListener(main);
 
     /* Flicker constants */
-    var isFlickerAnimationOn = false;
     var flickerAnimationIntervalMilliseconds = 500;
-    var runFlickerAnimationOnlyOnce = true;
-    var numberOfTimesToRunFlickerAnimation = 1;
+    var numberOfTimesToRunFlickerAnimation = 10;
 
     /* css Animations */
     var isCSSAnimationOn = true;
@@ -34,21 +32,19 @@ try
         try
         {
             LogToConsole("Main");
+            var start = new Date().getTime();
+
             if (request.mode === "clear")
             {
                 LogToConsole("Clearing stuff");
                 reset();
-                            if(document.getElementsByTagName("p")[0]!=undefined)
-            {
-            	LogToConsole(document.getElementsByTagName("p")[0].innerHTML);
-            }
 
                 return;
             }
-            if (isFlickerAnimationOn)
+            else if(request.mode === "flicker")
             {
                 flicker(flickerAnimationIntervalMilliseconds);
-            }
+        	}
 
             if (isCSSAnimationOn)
             {
@@ -60,6 +56,11 @@ try
             {
             	LogToConsole(document.getElementsByTagName("p")[0].innerHTML);
             }
+
+            var end = new Date().getTime();
+			var time = end - start;
+			alert('Execution time: ' + time);
+
 
             //setTimeout(reset, 5000);
         }
