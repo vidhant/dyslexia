@@ -14,11 +14,6 @@ If it's on a button which contains class "clear":
 
 var modesController = new ModesController();
 
-document.addEventListener("DOMContentLoaded", (e) =>
-{
-
-});
-
 document.addEventListener("click", (e) =>
 {
     if (e.target.checked != undefined)
@@ -32,15 +27,14 @@ document.addEventListener("click", (e) =>
             modesController.switchTurnedOn(e.target.value);
         }
     }
-    else if (e.target.classList.contains("mode"))
+    else if (e.target.classList.contains("clear"))
     {
-        var chosenMode = e.target.value;
-
+        modesController.uncheckAll();
         var gettingActiveTab = browser.tabs.query({ active: true, currentWindow: true });
 
         gettingActiveTab.then((tabs) =>
         {
-            browser.tabs.sendMessage(tabs[0].id, { mode: chosenMode, action: undefined });
+            browser.tabs.sendMessage(tabs[0].id, { mode: "clear", action: undefined });
         });
     }
     else if (e.target.classList.contains("reset"))
@@ -53,18 +47,37 @@ document.addEventListener("click", (e) =>
 
 function ModesController()
 {
-    this.switchStates =
+    try
     {
-        "flicker": "off",
-        "mirrorTheLetters": "off",
-        "upsideDown": "off",
-        "blur": "off",
-        "zoomInZoomOut": "off",
-        "bounce": "off",
-        "bounceAndZoomInZoomOut": "off",
-        "none": "on"
-    };
-    this.selectedMode = "none";
+        this.switchStates =
+        {
+            "flicker": "off",
+            "mirrorTheLetters": "off",
+            "upsideDown": "off",
+            "blur": "off",
+            "zoomInZoomOut": "off",
+            "bounce": "off",
+            "bounceAndZoomInZoomOut": "off",
+            "none": "on"
+        };
+        this.selectedMode = "none";
+        var getting = browser.storage.local.get("dyslexiaExtensionMode");
+        getting.then((returned) =>
+        {
+            if (returned != undefined)
+            {
+                this.SetCurrentMode(returned.dyslexiaExtensionMode);
+            }
+            else
+            {
+                SetCurrentMode("none");
+            }
+        });
+    }
+    catch (err)
+    {
+        alert("Error in : ModesController!" + err.message);
+    }
 }
 
 ModesController.prototype.switchTurnedOn = function (mode)
@@ -90,7 +103,7 @@ ModesController.prototype.switchTurnedOn = function (mode)
                 this.switchStates[this.selectedMode] = "off";
             }
 
-            this.selectedMode = mode;
+            this.SetCurrentMode(mode);
             this.switchStates[this.selectedMode] = "on";
             browser.tabs.sendMessage(tabs[0].id, { mode: mode, action: "apply" });
         }
@@ -109,7 +122,7 @@ ModesController.prototype.switchTurnedOff = function (mode)
         try
         {
             this.switchStates[mode] = "off";
-            this.selectedMode = "none";
+            this.SetCurrentMode("none");
             browser.tabs.sendMessage(tabs[0].id, { mode: mode, action: "remove" });
         }
         catch (err)
@@ -117,4 +130,79 @@ ModesController.prototype.switchTurnedOff = function (mode)
             alert("Error in : switchTurnedOff!" + err.message);
         }
     });
+}
+
+ModesController.prototype.uncheckAll = function ()
+{
+    try
+    {
+        if (this.selectedMode != "none")
+        {
+            var options = document.getElementsByTagName("input");
+            for (var i = 0; i < options.length; i++)
+            {
+                if (options[i].value === this.selectedMode)
+                {
+                    options[i].checked = false;
+                }
+            }
+            this.switchStates[this.selectedMode] = "off";
+        }
+    }
+    catch (err)
+    {
+        alert("Error in : uncheckAll!" + err.message);
+    }
+}
+
+ModesController.prototype.checkThis = function (mode)
+{
+    try
+    {
+        if (mode != "none")
+        {
+            var options = document.getElementsByTagName("input");
+            for (var i = 0; i < options.length; i++)
+            {
+                if (options[i].value === mode)
+                {
+                    options[i].checked = true;
+                }
+            }
+            this.switchStates[this.selectedMode] = "on";
+        }
+    }
+    catch (err)
+    {
+        alert("Error in : checkThis!" + err.message);
+    }
+}
+
+ModesController.prototype.load = function ()
+{
+    if (this.selectedMode === "none")
+    {
+        return;
+    }
+    else
+    {
+        alert("wow");
+        var options = document.getElementsByTagName("input");
+        for (var i = 0; i < options.length; i++)
+        {
+            if (options[i].value === this.selectedMode)
+            {
+                options[i].checked = true;
+            }
+        }
+    }
+}
+
+ModesController.prototype.SetCurrentMode = function (mode)
+{
+    this.selectedMode = mode;
+    browser.storage.local.set({
+        dyslexiaExtensionMode: mode
+    });
+    this.checkThis(mode);
 }
