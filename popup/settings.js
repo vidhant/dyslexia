@@ -12,43 +12,29 @@ If it's on a button which contains class "clear":
   Close the popup. This is needed, as the content script malfunctions after page reloads.
 */
 
+var modesController = new ModesController();
+
+document.addEventListener("DOMContentLoaded", (e) =>
+{
+
+});
+
 document.addEventListener("click", (e) =>
 {
-    if(e.target.checked != undefined)
+    if (e.target.checked != undefined)
     {
-        var chosenMode = e.target.value;
-        console.log("chosen mode is : " + chosenMode);
-
-        if(chosenMode === "flicker")
+        if (e.target.checked === false)
         {
-            var modes = document.getElementsByTagName("input");
-
-            for(var i=0;i<modes.length;i++)
-            {
-                if(modes[i].value != "flicker")
-                {
-                    modes[i].style.visibility = "hidden";
-                }
-            }
+            modesController.switchTurnedOff(e.target.value);
         }
-
-        var action = "apply";
-
-        if(e.target.checked === false)
+        else
         {
-            action = "remove";
+            modesController.switchTurnedOn(e.target.value);
         }
-
-        var gettingActiveTab = browser.tabs.query({ active: true, currentWindow: true });
-        gettingActiveTab.then((tabs) =>
-        {
-            browser.tabs.sendMessage(tabs[0].id, { mode: chosenMode, action:  action});
-        });
     }
     else if (e.target.classList.contains("mode"))
     {
         var chosenMode = e.target.value;
-        console.log("Sending the message.");
 
         var gettingActiveTab = browser.tabs.query({ active: true, currentWindow: true });
 
@@ -63,3 +49,72 @@ document.addEventListener("click", (e) =>
         window.close();
     }
 });
+
+
+function ModesController()
+{
+    this.switchStates =
+    {
+        "flicker": "off",
+        "mirrorTheLetters": "off",
+        "upsideDown": "off",
+        "blur": "off",
+        "zoomInZoomOut": "off",
+        "bounce": "off",
+        "bounceAndZoomInZoomOut": "off",
+        "none": "on"
+    };
+    this.selectedMode = "none";
+}
+
+ModesController.prototype.switchTurnedOn = function (mode)
+{
+    var gettingActiveTab = browser.tabs.query({ active: true, currentWindow: true });
+    gettingActiveTab.then((tabs) =>
+    {
+        try
+        {
+            if (this.selectedMode != "none")
+            {
+                // Remove the existing mode
+                browser.tabs.sendMessage(tabs[0].id, { mode: this.selectedMode, action: "remove" });
+
+                var options = document.getElementsByTagName("input");
+                for (var i = 0; i < options.length; i++)
+                {
+                    if (options[i].value === this.selectedMode)
+                    {
+                        options[i].checked = false;
+                    }
+                }
+                this.switchStates[this.selectedMode] = "off";
+            }
+
+            this.selectedMode = mode;
+            this.switchStates[this.selectedMode] = "on";
+            browser.tabs.sendMessage(tabs[0].id, { mode: mode, action: "apply" });
+        }
+        catch (err)
+        {
+            alert("Error in : switchTurnedOn!" + err.message);
+        }
+    });
+}
+
+ModesController.prototype.switchTurnedOff = function (mode)
+{
+    var gettingActiveTab = browser.tabs.query({ active: true, currentWindow: true });
+    gettingActiveTab.then((tabs) =>
+    {
+        try
+        {
+            this.switchStates[mode] = "off";
+            this.selectedMode = "none";
+            browser.tabs.sendMessage(tabs[0].id, { mode: mode, action: "remove" });
+        }
+        catch (err)
+        {
+            alert("Error in : switchTurnedOff!" + err.message);
+        }
+    });
+}

@@ -20,7 +20,7 @@ var flickerAnimationIntervalMilliseconds = 3500;
 var numberOfTimesToRunFlickerAnimation = 50;
 var fractionOfNodesToFlickerAnimate = 0.2;
 
-var isLoggingOn = false;
+var isLoggingOn = true;
 
 var sessionKey = getRandomInt(0, 99999999);
 var cssAnimator = new CSSAnimator(sessionKey);
@@ -178,7 +178,7 @@ function flicker(flickerAnimationIntervalMilliseconds)
 
         function messupLauncher()
         {
-            if (numberOfTimesToRunFlickerAnimation != 0)
+            if (numberOfTimesToRunFlickerAnimation > 0)
             {
                 messUpWords();
                 numberOfTimesToRunFlickerAnimation--;
