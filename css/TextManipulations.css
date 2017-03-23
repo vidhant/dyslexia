@@ -1,3 +1,8 @@
+.blur {
+    color: transparent;
+    text-shadow: 0 0 1.5px rgba(0,0,0,0.5);
+}
+
 .mirrorTheLetters {
     transform: rotateY(180deg);
     webkit-transform: rotateY(180deg);
@@ -14,11 +19,6 @@
     -o-transform: rotateX(180deg);
     -ms-transform: rotateX(180deg);
     unicode-bidi: bidi-override;
-}
-
-.blur {
-    color: transparent;
-    text-shadow: 0 0 1.5px rgba(0,0,0,0.5);
 }
 
 .zoom {
