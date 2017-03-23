@@ -19,7 +19,7 @@ browser.runtime.onMessage.addListener(main);
 var flickerAnimationIntervalMilliseconds = 5000;
 var numberOfTimesToRunFlickerAnimation = 10;
 
-var isLoggingOn = true;
+var isLoggingOn = false;
 
 var sessionKey = getRandomInt(0, 99999999);
 var cssAnimator = new CSSAnimator(sessionKey);
@@ -42,20 +42,20 @@ function main(request, sender, sendResponse)
         }
         else
         {
-        	if(request.action === "apply")
-        	{
-        		 cssAnimator.apply(request.mode);
-        	}
-        	else
-        	{
-        		 cssAnimator.remove(request.mode);
-        	}
+            if (request.action === "apply")
+            {
+                cssAnimator.apply(request.mode);
+            }
+            else
+            {
+                cssAnimator.remove(request.mode);
+            }
         }
 
         var end = new Date()
             .getTime();
         var time = end - start;
-        console.log('Execution time: ' + time);
+        console.log('Execution time for (mode, time): ' + request.mode + " " + time);
 
 
         //setTimeout(reset, 5000);
@@ -73,7 +73,7 @@ function getTextNodesIn(el)
         .find(":not(iframe,script)")
         .addBack()
         .contents()
-        .filter(function()
+        .filter(function ()
         {
             return this.nodeType == 3;
         });
@@ -249,7 +249,7 @@ function CSSAnimator(sessionKey)
     this.wordsInTextNodes = null;
 }
 
-CSSAnimator.prototype.setup = function()
+CSSAnimator.prototype.setup = function ()
 {
     this.injectCSS('css/TextManipulations.css');
     this.findWordsAndTextNodes();
@@ -257,7 +257,7 @@ CSSAnimator.prototype.setup = function()
     this.initialize = false;
 }
 
-CSSAnimator.prototype.apply = function(mode)
+CSSAnimator.prototype.apply = function (mode)
 {
     if (this.initialize === true)
     {
@@ -266,15 +266,15 @@ CSSAnimator.prototype.apply = function(mode)
     this.applyEffect(mode);
 }
 
-CSSAnimator.prototype.remove = function(mode)
+CSSAnimator.prototype.remove = function (mode)
 {
-	if(this.initialize===false)
-	{
-		this.removeEffect(mode);
-	}
+    if (this.initialize === false)
+    {
+        this.removeEffect(mode);
+    }
 }
 
-CSSAnimator.prototype.injectCSS = function(url)
+CSSAnimator.prototype.injectCSS = function (url)
 {
     try
     {
@@ -299,7 +299,7 @@ CSSAnimator.prototype.injectCSS = function(url)
 }
 
 
-CSSAnimator.prototype.addSpan = function(word)
+CSSAnimator.prototype.addSpan = function (word)
 {
     try
     {
@@ -324,7 +324,7 @@ CSSAnimator.prototype.addSpan = function(word)
 
 }
 
-CSSAnimator.prototype.findWordsAndTextNodes = function()
+CSSAnimator.prototype.findWordsAndTextNodes = function ()
 {
     textNodes = getTextNodesIn($("p, div, span"));
 
@@ -354,7 +354,7 @@ CSSAnimator.prototype.findWordsAndTextNodes = function()
     };
 }
 
-CSSAnimator.prototype.applyEffect = function(mode)
+CSSAnimator.prototype.applyEffect = function (mode)
 {
     LogToConsole("Applying css!");
     var cssRules = ["mirrorTheLetters", "upsideDown", "blur", "zoom", "bounce", "zoomInZoomOut", "bounceAndZoomInZoomOut"];
@@ -370,32 +370,37 @@ CSSAnimator.prototype.applyEffect = function(mode)
     {
         listOfNodesAdded[nodeNumber].className = listOfNodesAdded[nodeNumber].className + " " + mode;
         if (mode === "mirrorTheLetters")
-       {
-           listOfNodesAdded[nodeNumber].textContent = listOfNodesAdded[nodeNumber].textContent.trim() +  " ";
-       }
+        {
+            listOfNodesAdded[nodeNumber].textContent = " " + listOfNodesAdded[nodeNumber].textContent.trim();
+        }
     }
 }
 
-CSSAnimator.prototype.removeEffect = function(mode) {
-	try
-	{
-			    LogToConsole("Removing css!");
+CSSAnimator.prototype.removeEffect = function (mode)
+{
+    try
+    {
+        LogToConsole("Removing css!");
 
-	    var listOfNodesAdded = document.getElementsByName(sessionKey);
-	    LogToConsole("Total nodes to remove css : " + listOfNodesAdded.length);
+        var listOfNodesAdded = document.getElementsByName(sessionKey);
+        LogToConsole("Total nodes to remove css : " + listOfNodesAdded.length);
 
-	    for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
-	    {
-	    	console.log(listOfNodesAdded[nodeNumber].className);
-	    	if(listOfNodesAdded[nodeNumber].className.includes(mode) === true)
-	    	{
-	    		LogToConsole("Replacing");
-	    		listOfNodesAdded[nodeNumber].className = listOfNodesAdded[nodeNumber].className.replace(mode, '');	
-	    	}
-	    }
+        for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
+        {
+            LogToConsole(listOfNodesAdded[nodeNumber].className);
+            if (listOfNodesAdded[nodeNumber].className.includes(mode) === true)
+            {
+                LogToConsole("Replacing");
+                listOfNodesAdded[nodeNumber].className = listOfNodesAdded[nodeNumber].className.replace(mode, '');
+                if(mode === "mirrorTheLetters")
+                {
+                    listOfNodesAdded[nodeNumber].textContent = listOfNodesAdded[nodeNumber].textContent.trim() + " ";
+                }
+            }
+        }
 
-	}
-	    catch (err)
+    }
+    catch (err)
     {
         Block("Error in removeEffect() " + err.message);
     }
@@ -404,7 +409,7 @@ CSSAnimator.prototype.removeEffect = function(mode) {
 }
 
 
-CSSAnimator.prototype.addSpanNodes = function()
+CSSAnimator.prototype.addSpanNodes = function ()
 {
     LogToConsole("Applying CSS Animations. Total textnodes are : " + textNodes.length);
 
@@ -495,7 +500,7 @@ CSSAnimator.prototype.addSpanNodes = function()
 }
 
 
-CSSAnimator.prototype.reset = function(sessionKey)
+CSSAnimator.prototype.reset = function (sessionKey)
 {
     try
     {
@@ -534,47 +539,47 @@ CSSAnimator.prototype.reset = function(sessionKey)
 
 }
 
-    // Total number of times to run flicker.
-    // What is the maximum size of text node to animate.
+// Total number of times to run flicker.
+// What is the maximum size of text node to animate.
 
-    /* Modes:
+/* Modes:
 
-    1. Similar shaped letters.
-    		a) Similar shaped letters o,e,c
-    		b) Similar shape but different orientation : b, p, d, q
+1. Similar shaped letters.
+        a) Similar shaped letters o,e,c
+        b) Similar shape but different orientation : b, p, d, q
 
-    2. Some letters backwards or upside down.
-    		a) Backwards -- Done
-    		b) Upside down -- Done
+2. Some letters backwards or upside down.
+        a) Backwards -- Done
+        b) Upside down -- Done
 
-    3. Some words totally backwards - bird as drib. -- Done
+3. Some words totally backwards - bird as drib. -- Done
 
-    4. The letters might look all jumbled up and out of order.
-    		a) JS - 
-    			i) Continually -- Done
-    			ii) Once -- 
-    		c) CSS -- 
+4. The letters might look all jumbled up and out of order.
+        a) JS - 
+            i) Continually -- Done
+            ii) Once -- 
+        c) CSS -- 
 
-    5. Faded/Zoomed under a magnifying glass effect -- 
+5. Faded/Zoomed under a magnifying glass effect -- 
 
-    6. Jumping words -- Done
+6. Jumping words -- Done
 
-    7. Flickering words -- 
+7. Flickering words -- 
 
-    8. Blurred words -- Done
+8. Blurred words -- Done
 
-    9. Whole content, reading units -- With a moving, hovering zoom/blur --
-
-
-    10. Issues:
-
-    a) Punctuations.
-    b) Spacing.
-    c) Not working for some URLs on Edge
-
-    11. Add - random bounce
-
-    */
+9. Whole content, reading units -- With a moving, hovering zoom/blur --
 
 
-    // document.getElementById("something").innerHTML = "<span class='upsideDown inTheSameLine'>Hello</span> ji";
+10. Issues:
+
+a) Punctuations.
+b) Spacing.
+c) Not working for some URLs on Edge
+
+11. Add - random bounce
+
+*/
+
+
+// document.getElementById("something").innerHTML = "<span class='upsideDown inTheSameLine'>Hello</span> ji";
