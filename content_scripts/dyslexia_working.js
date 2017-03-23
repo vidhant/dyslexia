@@ -29,8 +29,7 @@ function main(request, sender, sendResponse)
     try
     {
         LogToConsole("Main");
-        var start = new Date()
-            .getTime();
+        var start = new Date().getTime();
 
         if (request.mode === "clear")
         {

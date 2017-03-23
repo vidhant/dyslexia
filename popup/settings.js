@@ -48,18 +48,13 @@ document.addEventListener("click", (e) =>
     else if (e.target.classList.contains("mode"))
     {
         var chosenMode = e.target.value;
-
-        //browser.tabs.executeScript(null, {
-        //    file: "/content_scripts/dyslexia_working.js"
-        //});
-
         console.log("Sending the message.");
 
         var gettingActiveTab = browser.tabs.query({ active: true, currentWindow: true });
 
         gettingActiveTab.then((tabs) =>
         {
-            browser.tabs.sendMessage(tabs[0].id, { mode: chosenMode });
+            browser.tabs.sendMessage(tabs[0].id, { mode: chosenMode, action: undefined });
         });
     }
     else if (e.target.classList.contains("reset"))
