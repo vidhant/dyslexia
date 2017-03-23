@@ -12,7 +12,45 @@ If it's on a button which contains class "clear":
   Close the popup. This is needed, as the content script malfunctions after page reloads.
 */
 
-var modesController = new ModesController();
+function Messenger(handleMessagesFromContentScript)
+{
+    this.registerHandler(handleMessagesFromContentScript);
+}
+
+Messenger.prototype.registerHandler = function(handler)
+{
+    browser.runtime.onMessage.addListener(handler);
+}
+
+/* Receives RESPONSE (i.e., BG initiated) messages from CS */
+Messenger.prototype.handleResponse = function(message) 
+{
+    alert(`Message from the content script:  ${message.response}`);
+}
+
+Messenger.prototype.handleError = function(error) 
+{
+    alert(`Error in sending message to CS: ${error}`);
+}
+
+/* Sends messages to CS */
+Messenger.prototype.sendMessageToContentScript = function(json) 
+{
+    var gettingActiveTab = browser.tabs.query({ active: true, currentWindow: true });
+
+    gettingActiveTab.then((tabs) =>
+    {
+        var sending = browser.tabs.sendMessage(tabs[0].id, json);
+        sending.then(handleResponse, handleError);
+    });
+}
+
+/* Handles message from CS */
+function handleMessage(request, sender, sendResponse) 
+{
+      alert("Message from the content script: " + request);
+      sendResponse({response: "Response from CS script."});
+}
 
 document.addEventListener("click", (e) =>
 {
@@ -30,12 +68,7 @@ document.addEventListener("click", (e) =>
     else if (e.target.classList.contains("clear"))
     {
         modesController.uncheckAll();
-        var gettingActiveTab = browser.tabs.query({ active: true, currentWindow: true });
-
-        gettingActiveTab.then((tabs) =>
-        {
-            browser.tabs.sendMessage(tabs[0].id, { mode: "clear", action: undefined });
-        });
+        messenger.sendMessageToContentScript( { mode: "clear", action: undefined });
     }
     else if (e.target.classList.contains("reset"))
     {
@@ -82,15 +115,13 @@ function ModesController()
 
 ModesController.prototype.switchTurnedOn = function (mode)
 {
-    var gettingActiveTab = browser.tabs.query({ active: true, currentWindow: true });
-    gettingActiveTab.then((tabs) =>
-    {
+
         try
         {
             if (this.selectedMode != "none")
             {
                 // Remove the existing mode
-                browser.tabs.sendMessage(tabs[0].id, { mode: this.selectedMode, action: "remove" });
+                messenger.sendMessageToContentScript( { mode: this.selectedMode, action: "remove" });
 
                 var options = document.getElementsByTagName("input");
                 for (var i = 0; i < options.length; i++)
@@ -103,15 +134,15 @@ ModesController.prototype.switchTurnedOn = function (mode)
                 this.switchStates[this.selectedMode] = "off";
             }
 
+
             this.SetCurrentMode(mode);
             this.switchStates[this.selectedMode] = "on";
-            browser.tabs.sendMessage(tabs[0].id, { mode: mode, action: "apply" });
+            messenger.sendMessageToContentScript( { mode: mode, action: "apply" });
         }
         catch (err)
         {
             alert("Error in : switchTurnedOn!" + err.message);
         }
-    });
 }
 
 ModesController.prototype.switchTurnedOff = function (mode)
@@ -123,7 +154,7 @@ ModesController.prototype.switchTurnedOff = function (mode)
         {
             this.switchStates[mode] = "off";
             this.SetCurrentMode("none");
-            browser.tabs.sendMessage(tabs[0].id, { mode: mode, action: "remove" });
+            messenger.sendMessageToContentScript( { mode: mode, action: "remove" });
         }
         catch (err)
         {
@@ -206,3 +237,6 @@ ModesController.prototype.SetCurrentMode = function (mode)
     });
     this.checkThis(mode);
 }
+
+var messenger = new Messenger(handleMessage);
+var modesController = new ModesController();
