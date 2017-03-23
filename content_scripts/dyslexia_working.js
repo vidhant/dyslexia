@@ -16,8 +16,9 @@
 browser.runtime.onMessage.addListener(main);
 
 /* Flicker constants */
-var flickerAnimationIntervalMilliseconds = 5000;
-var numberOfTimesToRunFlickerAnimation = 10;
+var flickerAnimationIntervalMilliseconds = 3500;
+var numberOfTimesToRunFlickerAnimation = 50;
+var fractionOfNodesToFlickerAnimate = 0.2;
 
 var isLoggingOn = false;
 
@@ -122,22 +123,13 @@ function flicker(flickerAnimationIntervalMilliseconds)
             LogToConsole("Messing it. Total textnodes are : " + textNodes.length);
             for (var i = 0; i < textNodes.length; i++)
             {
-                LogToConsole("Node : " + i + " is : '" + textNodes[i].textContent + "'");
-            }
-            for (var i = 0; i < textNodes.length; i++)
-            {
-
                 var node = textNodes[i];
                 for (var j = 0; j < wordsInTextNodes[i].length; j++)
                 {
-                    LogToConsole("Node to be tripped is : " + textNodes[i].textContent);
-                    LogToConsole("Word to be tripped is : " + wordsInTextNodes[i][j]);
-                    if (Math.random() < 1 / 5)
+                    if (Math.random() > fractionOfNodesToFlickerAnimate)
                     {
                         continue;
                     }
-
-                    LogToConsole("Tripping it now.");
 
                     var wordMeta = wordsInTextNodes[i][j];
 
@@ -145,18 +137,7 @@ function flicker(flickerAnimationIntervalMilliseconds)
                     var before = node.nodeValue.slice(0, wordMeta.position);
                     var after = node.nodeValue.slice(wordMeta.position + wordMeta.length);
 
-                    LogToConsole("Word : " + word);
-                    LogToConsole("Before: " + before);
-                    LogToConsole("After: " + after);
-
-                    LogToConsole("**********");
-                    LogToConsole("Node value WAS : " + node.nodeValue);
-                    var animatedWord = messUpWord(word);
-                    LogToConsole("----------------------------------Animated word is : " + animatedWord);
-                    node.nodeValue = before + animatedWord + after;
-
-                    LogToConsole("**********");
-                    LogToConsole("Node value IS : " + node.nodeValue);
+                    node.nodeValue = before + messUpWord(word) + after;
                 };
             };
         }
@@ -166,7 +147,6 @@ function flicker(flickerAnimationIntervalMilliseconds)
             LogToConsole("messUpWord called for : " + word);
             if (word.length < 3)
             {
-
                 return word;
             }
             return word[0] + messUpMessyPart(word.slice(1, -1)) + word[word.length - 1];
@@ -200,7 +180,6 @@ function flicker(flickerAnimationIntervalMilliseconds)
         {
             if (numberOfTimesToRunFlickerAnimation != 0)
             {
-                findWordsAndTextNodes();
                 messUpWords();
                 numberOfTimesToRunFlickerAnimation--;
             }
@@ -287,9 +266,7 @@ CSSAnimator.prototype.injectCSS = function (url)
             $('head')
                 .html($('head')
                     .html() + '<link rel="stylesheet" type="text/css" href="' + url + '" type="text/css" />');
-            //LogToConsole("Head html is : '" + $('head').html() + "'");
         }
-        //$('head').append('<link rel="stylesheet" href="css/TextManipulations.css" type="text/css" />');
     }
     catch (err)
     {
@@ -407,7 +384,6 @@ CSSAnimator.prototype.removeEffect = function (mode)
 
 
 }
-
 
 CSSAnimator.prototype.addSpanNodes = function ()
 {
