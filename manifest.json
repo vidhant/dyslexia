@@ -22,5 +22,7 @@
       "js": [ "content_scripts/jquery-3.2.0.min", "content_scripts/dyslexia_working.js" ],
       "css": [ "css/TextManipulations.css" ]
     }
-  ]
+  ],
+
+  "permissions": [ "storage" ]
 }
