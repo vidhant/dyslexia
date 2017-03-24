@@ -1,23 +1,107 @@
 ﻿<!DOCTYPE html>
-
 <html>
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="settings.css" />
 </head>
-
 <body>
-    <div class="button mode">any</div>
-    <div class="button mode">mirrorTheLetters</div>
-    <div class="button mode">upsideDown</div>
-    <div class="button mode">blur</div>
-    <div class="button mode">zoom</div>
-    <div class="button mode">zoomInZoomOut</div>
-    <div class="button mode">bounce</div>
-    <div class="button mode">clear</div>
-    <div class="button reset">reset</div>
-
-    <script src="settings.js"></script>
+    <table>
+        <tr>
+            <td>
+                <button class="general clear" value="clear">Clear All</button>
+            </td>
+            <td>
+                <button class="general reset">Refresh (F5)</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h2>mirrorTheLetters</h2>
+            </td>
+            <td>
+                <label class="switch">
+                    <input type="checkbox" value="mirrorTheLetters">
+                    <div class="slider round"></div>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h2>upsideDown</h2>
+            </td>
+            <td>
+                <label class="switch">
+                    <input type="checkbox" value="upsideDown">
+                    <div class="slider round"></div>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h2>blur</h2>
+            </td>
+            <td>
+                <label class="switch">
+                    <input type="checkbox" value="blur">
+                    <div class="slider round"></div>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h2>zoom</h2>
+            </td>
+            <td>
+                <label class="switch">
+                    <input type="checkbox" value="zoom">
+                    <div class="slider round"></div>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h2>zoomInZoomOut</h2>
+            </td>
+            <td>
+                <label class="switch">
+                    <input type="checkbox" value="zoomInZoomOut">
+                    <div class="slider round"></div>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h2>bounce</h2>
+            </td>
+            <td>
+                <label class="switch">
+                    <input type="checkbox" value="bounce">
+                    <div class="slider round"></div>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h2>bounceAndZoomInZoomOut</h2>
+            </td>
+            <td>
+                <label class="switch">
+                    <input type="checkbox" value="bounceAndZoomInZoomOut">
+                    <div class="slider round"></div>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h2>Flicker</h2>
+            </td>
+            <td>
+                <label class="switch">
+                    <input type="checkbox" value="flicker">
+                    <div class="slider round"></div>
+                </label>
+            </td>
+        </tr>
+        <script src="settings.js"></script>
 </body>
-
 </html>
