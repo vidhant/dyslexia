@@ -41,7 +41,7 @@ Messenger.prototype.handleInitializationMessages = function (incomingMessage)
         var currentCSS = incomingMessage.currentCSSMode;
         var isFlickerActive = incomingMessage.isFlickerActive;
         var flickerDuration = incomingMessage.flickerInterval;
-        var animationProbability = incomingMessage.animationProbability;
+        var animationProbability = incomingMessage.flickerAnimationProbability;
 
         if (currentCSS != undefined && currentCSS != "none")
         {
