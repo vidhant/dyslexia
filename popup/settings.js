@@ -17,39 +17,83 @@ function Messenger(handleMessagesFromContentScript)
     this.registerHandler(handleMessagesFromContentScript);
 }
 
-Messenger.prototype.registerHandler = function(handler)
+Messenger.prototype.registerHandler = function (handler)
 {
     browser.runtime.onMessage.addListener(handler);
 }
 
 /* Receives RESPONSE (i.e., BG initiated) messages from CS */
-Messenger.prototype.handleResponse = function(message) 
+Messenger.prototype.handleResponse = function (message)
 {
+    alert("Called");
     alert(`Message from the content script:  ${message.response}`);
 }
 
-Messenger.prototype.handleError = function(error) 
+Messenger.prototype.handleError = function (error)
 {
     alert(`Error in sending message to CS: ${error}`);
 }
 
-/* Sends messages to CS */
-Messenger.prototype.sendMessageToContentScript = function(json) 
+Messenger.prototype.handleInitializationMessages = function (incomingMessage)
 {
-    var gettingActiveTab = browser.tabs.query({ active: true, currentWindow: true });
-
-    gettingActiveTab.then((tabs) =>
+    try
     {
-        var sending = browser.tabs.sendMessage(tabs[0].id, json);
-        sending.then(handleResponse, handleError);
-    });
+        var currentCSS = incomingMessage.currentCSSMode;
+        var isFlickerActive = incomingMessage.isFlickerActive;
+        var flickerDuration = incomingMessage.flickerInterval;
+        var animationProbability = incomingMessage.animationProbability;
+
+        if (currentCSS != undefined && currentCSS != "none")
+        {
+            modesController.switchTurnedOn(currentCSS);
+        }
+
+        if (isFlickerActive)
+        {
+            modesController.switchTurnedOn("flicker");
+        }
+    }
+    catch (err)
+    {
+        alert("Error in : handleInitializationMessages!" + err.message);
+    }
+}
+
+/* Sends messages to CS */
+Messenger.prototype.sendMessageToContentScript = function (json)
+{
+    try
+    {
+        var self = this;
+        var gettingActiveTab = browser.tabs.query({ active: true, currentWindow: true }, function (tabs)
+        {
+            var sending = browser.tabs.sendMessage(tabs[0].id, json, function (incomingMessage)
+            {
+                try
+                {
+                    if (incomingMessage.responseType === "responseToRequestingInitialization")
+                    {
+                        self.handleInitializationMessages(incomingMessage);
+                    }
+                }
+                catch (err)
+                {
+                    alert("Error in : Handling Messages from CS!" + err.message);
+                }
+            });
+        });
+    }
+    catch (err)
+    {
+        alert("Error in : Sending Message To CS!" + err.message);
+    }
 }
 
 /* Handles message from CS */
-function handleMessage(request, sender, sendResponse) 
+function handleMessage(request, sender, sendResponse)
 {
-      alert("Message from the content script: " + request);
-      sendResponse({response: "Response from CS script."});
+    alert("Message from the content script: " + request);
+    sendResponse({ response: "Response from CS script." });
 }
 
 document.addEventListener("click", (e) =>
@@ -68,7 +112,7 @@ document.addEventListener("click", (e) =>
     else if (e.target.classList.contains("clear"))
     {
         modesController.uncheckAll();
-        messenger.sendMessageToContentScript( { mode: "clear", action: undefined });
+        messenger.sendMessageToContentScript({ mode: "clear", action: undefined });
     }
     else if (e.target.classList.contains("reset"))
     {
@@ -94,18 +138,6 @@ function ModesController()
             "none": "on"
         };
         this.selectedMode = "none";
-        var getting = browser.storage.local.get("dyslexiaExtensionMode");
-        getting.then((returned) =>
-        {
-            if (returned != undefined)
-            {
-                this.SetCurrentMode(returned.dyslexiaExtensionMode);
-            }
-            else
-            {
-                SetCurrentMode("none");
-            }
-        });
     }
     catch (err)
     {
@@ -115,52 +147,47 @@ function ModesController()
 
 ModesController.prototype.switchTurnedOn = function (mode)
 {
-
-        try
+    try
+    {
+        if (this.selectedMode != "none")
         {
-            if (this.selectedMode != "none")
+            // Remove the existing mode
+            messenger.sendMessageToContentScript({ mode: this.selectedMode, action: "remove" });
+
+            var options = document.getElementsByTagName("input");
+            for (var i = 0; i < options.length; i++)
             {
-                // Remove the existing mode
-                messenger.sendMessageToContentScript( { mode: this.selectedMode, action: "remove" });
-
-                var options = document.getElementsByTagName("input");
-                for (var i = 0; i < options.length; i++)
+                if (options[i].value === this.selectedMode)
                 {
-                    if (options[i].value === this.selectedMode)
-                    {
-                        options[i].checked = false;
-                    }
+                    options[i].checked = false;
                 }
-                this.switchStates[this.selectedMode] = "off";
             }
+            this.switchStates[this.selectedMode] = "off";
+        }
 
 
-            this.SetCurrentMode(mode);
-            this.switchStates[this.selectedMode] = "on";
-            messenger.sendMessageToContentScript( { mode: mode, action: "apply" });
-        }
-        catch (err)
-        {
-            alert("Error in : switchTurnedOn!" + err.message);
-        }
+        this.SetCurrentMode(mode);
+        this.switchStates[this.selectedMode] = "on";
+        messenger.sendMessageToContentScript({ mode: mode, action: "apply" });
+    }
+    catch (err)
+    {
+        alert("Error in : switchTurnedOn!" + err.message);
+    }
 }
 
 ModesController.prototype.switchTurnedOff = function (mode)
 {
-    var gettingActiveTab = browser.tabs.query({ active: true, currentWindow: true });
-    gettingActiveTab.then((tabs) =>
+    try
     {
-        try
-        {
-            this.switchStates[mode] = "off";
-            this.SetCurrentMode("none");
-            messenger.sendMessageToContentScript( { mode: mode, action: "remove" });
-        }
-        catch (err)
-        {
-            alert("Error in : switchTurnedOff!" + err.message);
-        }
-    });
+        this.switchStates[mode] = "off";
+        this.SetCurrentMode("none");
+        messenger.sendMessageToContentScript({ mode: mode, action: "remove" });
+    }
+    catch (err)
+    {
+        alert("Error in : switchTurnedOff!" + err.message);
+    }
 }
 
 ModesController.prototype.uncheckAll = function ()
@@ -217,7 +244,6 @@ ModesController.prototype.load = function ()
     }
     else
     {
-        alert("wow");
         var options = document.getElementsByTagName("input");
         for (var i = 0; i < options.length; i++)
         {
@@ -231,12 +257,18 @@ ModesController.prototype.load = function ()
 
 ModesController.prototype.SetCurrentMode = function (mode)
 {
-    this.selectedMode = mode;
-    browser.storage.local.set({
-        dyslexiaExtensionMode: mode
-    });
-    this.checkThis(mode);
+    try
+    {
+        this.selectedMode = mode;
+        this.checkThis(mode);
+    }
+    catch (err)
+    {
+        alert("Error in : SetCurrentMode!" + err.message);
+    }
 }
 
 var messenger = new Messenger(handleMessage);
 var modesController = new ModesController();
+
+messenger.sendMessageToContentScript({ mode: "requestingInitialization" });
