@@ -15,6 +15,7 @@
 
 var currentMode = "";
 var originalHTMLContentOfBody = undefined;
+var originalTextContentOfBody = undefined;
 
 function main(request, sender, sendResponse)
 {
@@ -26,6 +27,11 @@ function main(request, sender, sendResponse)
         {
         	originalHTMLContentOfBody = document.getElementsByTagName("body")[0].innerHTML;
         }
+
+        if(originalTextContentOfBody === undefined)
+        {
+        	originalTextContentOfBody = document.getElementsByTagName("body")[0].innerText;
+        }        
 
         switch(request.type)
         {
@@ -55,7 +61,7 @@ function main(request, sender, sendResponse)
 	        			}
 	        			case "similarShapedLetters":
 	        			{
-	        				CSSLetterAnimator.apply("");
+	        				similarShapedLettersAnimator.apply();
 	        				currentMode = "similarShapedLetters";
 	        				sendResponse({ 
 				        			responseType: "statusResponse",
@@ -127,7 +133,7 @@ function main(request, sender, sendResponse)
         			}
         			case "similarShapedLetters":
         			{
-        				currentMode = "";
+        				similarShapedLettersAnimator.remove();
         				sendResponse({ 
 			        			responseType: "statusResponse",
 			        			status: "Removed"
@@ -1159,12 +1165,120 @@ CSSWordAnimator.prototype.reset = function (sessionKey)
     this.currentCSS = "none";
 }
 
+/* SimilarShapedLettersAnimator class */
+function SimilarShapedLettersAnimator(sessionKey)
+{
+	this.generatedText = "";
+	this.fractionToAnimate = 0.6;
+	this.bpdq = "bpdq";
+	this.oec = "oec";
+}
+
+SimilarShapedLettersAnimator.prototype.resetBodyToOriginalContent = function()
+{
+	// This is called only once, when CSSAnimator is setup.
+	if(document.getElementsByTagName("body").length == 0)
+	{
+		Logger.Block("There is no body to resetHTML.");
+	}
+	document.getElementsByTagName("body")[0].innerHTML = originalHTMLContentOfBody;
+}
+
+SimilarShapedLettersAnimator.prototype.apply = function()
+{
+	if(this.generatedText === "")
+	{
+		this.resetBodyToOriginalContent();
+		this.generateText();
+		this.generatedText = document.getElementsByTagName("body")[0].innerHTML;
+	}
+	document.getElementsByTagName("body")[0].innerHTML = this.generatedText;
+}
+
+SimilarShapedLettersAnimator.prototype.generateText = function()
+{
+	try
+	{
+		var textNodes = domHelper.getTextNodesIn($("p, div, span"));
+
+		for(var i = 0;i<textNodes.length;i++)
+		{
+			var newNodeValue = "";
+
+			for(var j=0;j<textNodes[i].nodeValue.length;j++)
+			{
+				var originalLetter = textNodes[i].nodeValue[j];
+				if((this.bpdq.indexOf(originalLetter) > -1) || (this.oec.indexOf(originalLetter) > -1))
+				{
+					var newLetter = this.replaceLetter(originalLetter);
+					logger.LogToConsole(newLetter + " and " + originalLetter);
+					newNodeValue += newLetter;
+				}
+				else
+				{
+					newNodeValue += originalLetter;
+				}
+			}
+			textNodes[i].nodeValue = newNodeValue;
+		}
+	}
+    catch (err)
+    {
+        logger.Block("Error in : SimilarShapedLettersAnimator::generateText : " + err.message);
+    }	
+}
+
+SimilarShapedLettersAnimator.prototype.replaceLetter = function(letter)
+{
+	if(Math.random() > this.fractionToAnimate)
+	{
+		return letter;
+	}
+	else
+	{
+		switch(letter)
+		{
+			case 'b':
+			case 'p':
+			case 'd':
+			case 'q':
+			{
+				return this.bpdq[helper.getRandomInt(0, this.bpdq.length-1)];
+			}
+			case 'o':
+			case 'e':
+			case 'c':
+			{
+				return this.oec[helper.getRandomInt(0, this.oec.length-1)];
+			}
+		}
+	}
+}
+
+SimilarShapedLettersAnimator.prototype.remove = function ()
+{
+    try
+    {
+     	this.resetBodyToOriginalContent();
+    }
+    catch (err)
+    {
+        logger.Block("Error in : SimilarShapedLettersAnimator::remove : " + err.message);
+    }
+}
+
+
+
+
+
+
 try
 {
     var helper = new Helper();
     var sessionKey = helper.getRandomInt(0, 99999999);
     var CSSWordAnimator = new CSSWordAnimator(sessionKey);
     var CSSLetterAnimator = new CSSLetterAnimator(sessionKey);
+    var similarShapedLettersAnimator = new SimilarShapedLettersAnimator(sessionKey);
     var messenger = new Messenger(main /*handlerForMessagesFromBackground*/);
     var logger = new Logger();
     var domHelper = new DOMHelper();
