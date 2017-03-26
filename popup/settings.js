@@ -43,7 +43,7 @@ Messenger.prototype.messageSent = function()
     try
     {
         this.sentMessages++;
-        document.getElementById("status").innerHTML = "Busy";
+        document.getElementById("status").innerHTML = "<span class='busy'>Busy</span>";
     }
     catch (err)
     {
@@ -56,7 +56,7 @@ Messenger.prototype.responseReceived = function()
     this.receivedResponses++;
     if(this.receivedResponses === this.sentMessages)
     {
-        document.getElementById("status").innerHTML = "Ready";
+        document.getElementById("status").innerHTML = "<span class='ready'>Ready<span>";
     }
 }
 

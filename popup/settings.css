@@ -5,7 +5,17 @@ input[type=checkbox] {
 }
 
 body html {
-  width:500px;
+  width: 500px;
+}
+
+.busy
+{
+  color: #e50d0d;
+}
+
+.ready
+{
+  color: #26ca28;
 }
 
 .text {
