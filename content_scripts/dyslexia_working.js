@@ -14,6 +14,7 @@
 });
 
 var currentMode = "";
+var originalHTMLContentOfBody = undefined;
 
 function main(request, sender, sendResponse)
 {
@@ -21,6 +22,11 @@ function main(request, sender, sendResponse)
     {
         var start = new Date().getTime();
         overlay.showOverlay();
+
+        if(originalHTMLContentOfBody === undefined)
+        {
+        	originalHTMLContentOfBody = document.getElementsByTagName("body")[0].innerHTML;
+        }
 
         switch(request.type)
         {
@@ -46,30 +52,31 @@ function main(request, sender, sendResponse)
 	        			}
 	        			case "similarShapedLetters":
 	        			{
+	        				CSSLetterAnimator.apply("");
 	        				currentMode = "similarShapedLetters";
 	        				break;
 	        			}
 	        			case "upsideDownLetters":
 	        			{
-							cssAnimator.apply("upsideDown");
+							CSSLetterAnimator.apply("upsideDownLetters");
 							currentMode = "upsideDownLetters";
 	        				break;
 	        			}
 	        			case "mirroredLetters":
 	        			{
-							cssAnimator.apply("");
+							CSSLetterAnimator.apply("mirroredLetters");
 							currentMode = "mirroredLetters";
 	        				break;
 	        			}
 	        			case "reverseWords":
 	        			{
-							cssAnimator.apply("mirrorTheWords");
+							CSSWordAnimator.apply("reverseWords");
 							currentMode="reverseWords";
 	        				break;
 	        			}
 	        			case "poppingWords":
 	        			{
-							cssAnimator.apply("bounceAndZoomInZoomOut");
+							CSSWordAnimator.apply("bounceAndZoomInZoomOut");
 							currentMode="poppingWords";
 	        				break;
 	        			}
@@ -98,25 +105,25 @@ function main(request, sender, sendResponse)
         			}
         			case "upsideDownLetters":
         			{
-						cssAnimator.remove("upsideDown");
+						CSSLetterAnimator.remove("upsideDownLetters");
         				currentMode = "";
         				break;
         			}
         			case "mirroredLetters":
         			{
-						cssAnimator.remove("");
+						CSSLetterAnimator.remove("mirroredLetters");
         				currentMode = "";
         				break;
         			}
         			case "reverseWords":
         			{
-						cssAnimator.remove("mirrorTheWords");
+						CSSWordAnimator.remove("reverseWords");
         				currentMode = "";
         				break;
         			}
         			case "poppingWords":
         			{
-						cssAnimator.remove("bounceAndZoomInZoomOut");
+						CSSWordAnimator.remove("bounceAndZoomInZoomOut");
         				currentMode = "";
         				break;
         			}
@@ -135,6 +142,7 @@ function main(request, sender, sendResponse)
         	}
 
         }
+        logger.LogToConsole("hiding overlay");
         overlay.hideOverlay();
 
         var end = new Date().getTime();
@@ -224,6 +232,18 @@ DOMHelper.prototype.getTextNodesIn = function (el)
     });
 }
 
+DOMHelper.prototype.getCopyOfCurrentBodyNode = function()
+{
+    var bodyTags = document.getElementsByTagName("body");
+    var clonedBody = (bodyTags.length != 0) ? bodyTags[0].cloneNode(false) : undefined;
+
+    if(clonedBody === undefined)
+    {
+    	Logger.Block("Can't clone the body");
+    }
+    return clonedBody;
+}
+
 
 /* Logger class */
 function Logger()
@@ -257,16 +277,28 @@ function WordJumbler()
     this.isActive = false;
 }
 
+WordJumbler.prototype.resetBodyToOriginalContent = function()
+{
+	// This is called only once, when CSSAnimator is setup.
+	if(document.getElementsByTagName("body").length == 0)
+	{
+		Logger.Block("There is no body to resetHTML.");
+	}
+	document.getElementsByTagName("body")[0].innerHTML = originalHTMLContentOfBody;
+}
+
 WordJumbler.prototype.stop = function ()
 {
     this.isActive = false;
     window.clearInterval(this.flickerIntervalListener);
+    this.resetBodyToOriginalContent();
 }
 
 WordJumbler.prototype.flicker = function ()
 {
     try
     {
+    	this.resetBodyToOriginalContent();
         logger.LogToConsole("Flicker called!!");
         var textNodes;
         var wordsInTextNodes = [];
@@ -382,43 +414,77 @@ WordJumbler.prototype.flicker = function ()
     }
 }
 
-/* CSSAnimator class */
-function CSSAnimator(sessionKey)
+
+
+
+
+
+
+
+
+/* CSSLetterAnimator class */
+function CSSLetterAnimator(sessionKey)
 {
-    this.sessionKey = sessionKey;
+    this.sessionKey = sessionKey + "addedByLA";
     this.initialize = true;
     this.IsOn = true;
     this.textNodes = null;
     this.wordsInTextNodes = null;
     this.currentCSS = "none";
-    this.cssRules = ["mirrorTheWords", "upsideDown", "blur", "zoom", "bounce", "zoomInZoomOut", "bounceAndZoomInZoomOut"];
-    this.fractionToAnimate = 0.4;
+    this.cssRules = ["mirroredLetters", "upsideDownLetters", "bounceAndZoomInZoomOut"];
+    this.fractionOfLettersToAnimate = 0.4;
+    this.fractionOfWordsToAnimate = 0.6;
+    this.innerHTMLWithSpans = undefined;
 }
 
-CSSAnimator.prototype.setup = function ()
+CSSLetterAnimator.prototype.setup = function ()
 {
     this.injectCSS('css/TextManipulations.css');
+    this.resetBodyToOriginalContent();
     this.findWordsAndTextNodes();
-    this.addSpanNodes();
+    this.addSpanNodesAroundLetters();
+    this.innerHTMLWithSpans = document.getElementsByTagName("body")[0].innerHTML;
     this.initialize = false;
 }
 
-CSSAnimator.prototype.theCurrentCSS = function ()
+CSSLetterAnimator.prototype.resetBodyToOriginalContent = function()
+{
+	// This is called only once, when CSSAnimator is setup.
+	if(document.getElementsByTagName("body").length == 0)
+	{
+		Logger.Block("There is no body to resetHTML.");
+	}
+	document.getElementsByTagName("body")[0].innerHTML = originalHTMLContentOfBody;
+}
+
+CSSLetterAnimator.prototype.resetBodyToContentWithSpans = function()
+{
+	// This is called only once, when CSSAnimator is setup.
+	if(document.getElementsByTagName("body").length == 0)
+	{
+		Logger.Block("There is no body to resetBodyToContentWithSpans.");
+	}
+	document.getElementsByTagName("body")[0].innerHTML = this.innerHTMLWithSpans;
+}
+
+
+CSSLetterAnimator.prototype.theCurrentCSS = function ()
 {
     return this.currentCSS;
 }
 
-CSSAnimator.prototype.apply = function (mode)
+CSSLetterAnimator.prototype.apply = function (mode)
 {
     if (this.initialize === true)
     {
         this.setup();
     }
+    this.resetBodyToContentWithSpans();
     this.applyEffect(mode);
     this.currentCSS = mode;
 }
 
-CSSAnimator.prototype.remove = function (mode)
+CSSLetterAnimator.prototype.remove = function (mode)
 {
     try
     {
@@ -431,6 +497,7 @@ CSSAnimator.prototype.remove = function (mode)
             this.removeEffect(mode);
         }
         this.currentCSS = "none";
+        this.resetBodyToOriginalContent();
     }
     catch (err)
     {
@@ -438,7 +505,7 @@ CSSAnimator.prototype.remove = function (mode)
     }
 }
 
-CSSAnimator.prototype.injectCSS = function (url)
+CSSLetterAnimator.prototype.injectCSS = function (url)
 {
     try
     {
@@ -457,31 +524,31 @@ CSSAnimator.prototype.injectCSS = function (url)
     }
 }
 
-CSSAnimator.prototype.addSpan = function (word)
+CSSLetterAnimator.prototype.addSpanAroundLetter = function (letter)
 {
     try
     {
         if (this.IsOn === true)
         {
-            logger.LogToConsole("Adding span for word: '" + word + "'");
+            logger.LogToConsole("Adding span for letter: '" + letter + "'");
 
             var span = document.createElement("span");
             span.className = "inTheSameLine";
-            span.setAttribute("name", sessionKey);
-            span.textContent = word + " ";
+            span.setAttribute("name", this.sessionKey);
+            span.textContent = letter;
 
             return span;
         }
     }
     catch (err)
     {
-        logger.Block("Error in : addingSpan!" + err.message);
+        logger.Block("Error in : addingSpanAroundLetter!" + err.message);
     }
 
     return null;
 }
 
-CSSAnimator.prototype.findWordsAndTextNodes = function ()
+CSSLetterAnimator.prototype.findWordsAndTextNodes = function ()
 {
     try
     {
@@ -518,7 +585,7 @@ CSSAnimator.prototype.findWordsAndTextNodes = function ()
     }
 }
 
-CSSAnimator.prototype.applyEffect = function (mode)
+CSSLetterAnimator.prototype.applyEffect = function (mode)
 {
     try
     {
@@ -530,13 +597,13 @@ CSSAnimator.prototype.applyEffect = function (mode)
 
         this.currentCSS = mode;
 
-        var listOfNodesAdded = document.getElementsByName(sessionKey);
+        var listOfNodesAdded = document.getElementsByName(this.sessionKey);
         logger.LogToConsole("Total nodes to add css : " + listOfNodesAdded.length);
 
         for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
         {
             listOfNodesAdded[nodeNumber].className = listOfNodesAdded[nodeNumber].className + " " + mode;
-            if (mode === "mirrorTheWords")
+            if (mode === "reverseWords")
             {
                 listOfNodesAdded[nodeNumber].textContent = " " + listOfNodesAdded[nodeNumber].textContent.trim();
             }
@@ -548,13 +615,13 @@ CSSAnimator.prototype.applyEffect = function (mode)
     }
 }
 
-CSSAnimator.prototype.removeEffect = function (mode)
+CSSLetterAnimator.prototype.removeEffect = function (mode)
 {
     try
     {
         logger.LogToConsole("Removing css!");
 
-        var listOfNodesAdded = document.getElementsByName(sessionKey);
+        var listOfNodesAdded = document.getElementsByName(this.sessionKey);
         logger.LogToConsole("Total nodes to remove css : " + listOfNodesAdded.length);
 
         for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
@@ -564,7 +631,7 @@ CSSAnimator.prototype.removeEffect = function (mode)
             {
                 logger.LogToConsole("Replacing");
                 listOfNodesAdded[nodeNumber].className = listOfNodesAdded[nodeNumber].className.replace(mode, '');
-                if (mode === "mirrorTheWords")
+                if (mode === "reverseWords")
                 {
                     listOfNodesAdded[nodeNumber].textContent = listOfNodesAdded[nodeNumber].textContent.trim() + " ";
                 }
@@ -578,7 +645,7 @@ CSSAnimator.prototype.removeEffect = function (mode)
     }
 }
 
-CSSAnimator.prototype.addSpanNodes = function ()
+CSSLetterAnimator.prototype.addSpanNodesAroundLetters = function ()
 {
     try
     {
@@ -598,8 +665,376 @@ CSSAnimator.prototype.addSpanNodes = function ()
                 var wordMeta = wordsInTextNodes[i][j];
 
                 var word = node.nodeValue.slice(wordMeta.position, wordMeta.position + wordMeta.length);
-                var before = node.nodeValue.slice(0, wordMeta.position);
-                var after = node.nodeValue.slice(wordMeta.position + wordMeta.length);
+
+                if (Math.random() > this.fractionOfWordsToAnimate)
+                {
+                    var textNode = document.createTextNode(word + " ");
+                    nodeSet.push(textNode);
+                }
+                else
+                {
+                	var doneUpto = -1;
+                	for(var k=0;k<word.length;k++)
+                	{
+        		        if (Math.random() > this.fractionOfLettersToAnimate)
+		                {
+		                    continue;
+		                }
+		                else
+		                {
+		                	var textNodeBefore = document.createTextNode(word.slice(doneUpto + 1, k));
+		                	nodeSet.push(textNodeBefore);
+		                	var newSpanNode = this.addSpanAroundLetter(word[k]);
+		                    if (newSpanNode != null)
+		                    {
+		                        nodeSet.push(newSpanNode);
+		                    }
+		                    else
+		                    {
+		                        var textNode = document.createTextNode(word[k]);
+		                        nodeSet.push(textNode);
+		                    }
+		                    doneUpto = k;
+		                    if(k==0)
+		                    {
+
+		                    }
+		                }
+                	}
+
+                	if(doneUpto + 1 != word.length)
+                	{
+                		nodeSet.push(document.createTextNode(word.slice(doneUpto + 1, word.length)));
+                	}
+                }
+            };
+
+            var whichChildIsThisTextNode = 0;
+            var currentNodeIterator = node;
+            while ((currentNodeIterator = currentNodeIterator.previousSibling) != null)
+            {
+                whichChildIsThisTextNode++;
+            }
+
+            for (var j = 0; j < nodeSet.length; j++)
+            {
+                if (nodeSet[j].nodeType === 3)
+                {
+                    logger.LogToConsole("Well, this is a text node");
+                }
+                node.parentNode.insertBefore(nodeSet[j], node);
+            }
+
+            currentNodeIterator = node;
+            var newChildNumber = 0;
+            while ((currentNodeIterator = currentNodeIterator.previousSibling) != null)
+            {
+                newChildNumber++;
+            }
+
+            if (newChildNumber != whichChildIsThisTextNode + nodeSet.length)
+            {
+
+            }
+
+            node.parentNode.removeChild(node.parentNode.childNodes[whichChildIsThisTextNode + nodeSet.length]);
+        };
+    }
+    catch (err)
+    {
+        logger.Block("Error in : addSpanNodesAroundLetters!" + err.message);
+    }
+}
+
+CSSLetterAnimator.prototype.reset = function (sessionKey)
+{
+    try
+    {
+        var mirroredNodes = document.getElementsByClassName("reverseWords");
+        for (var nodeNumber = mirroredNodes.length - 1; nodeNumber >= 0; nodeNumber--)
+        {
+            mirroredNodes[nodeNumber].innerText = mirroredNodes[nodeNumber].innerText.trim() + " ";
+            mirroredNodes[nodeNumber].className = "";
+        }
+
+        var listOfNodesAdded = document.getElementsByName(this.sessionKey);
+        logger.LogToConsole("Total nodes to be removed : " + listOfNodesAdded.length);
+
+        for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
+        {
+            logger.LogToConsole(nodeNumber);
+            var innerTextNode = document.createTextNode(listOfNodesAdded[nodeNumber].innerText);
+            logger.LogToConsole("Create the text node");
+            //listOfNodesAdded[nodeNumber].innerText);
+            listOfNodesAdded[nodeNumber].parentNode.insertBefore(innerTextNode, listOfNodesAdded[nodeNumber]);
+            logger.LogToConsole("Create and appended: " + innerTextNode.textContent);
+        }
+
+        for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
+        {
+
+            listOfNodesAdded[nodeNumber].remove();
+        }
+        this.resetBodyToOriginalContent();
+    }
+    catch (err)
+    {
+        logger.Block("Error in reset() " + err.message);
+    }
+    this.initialize = true;
+    this.currentCSS = "none";
+}
+
+
+
+
+
+
+
+
+
+
+/* CSSWordAnimator class */
+function CSSWordAnimator(sessionKey)
+{
+    this.sessionKey = sessionKey  + "addedByWA";
+    this.initialize = true;
+    this.IsOn = true;
+    this.textNodes = null;
+    this.wordsInTextNodes = null;
+    this.currentCSS = "none";
+    this.cssRules = ["reverseWords", "upsideDown", "blur", "zoom", "bounce", "zoomInZoomOut", "bounceAndZoomInZoomOut"];
+    this.fractionToAnimate = 0.4;
+    this.innerHTMLWithSpans = undefined;
+}
+
+CSSWordAnimator.prototype.setup = function ()
+{
+    this.injectCSS('css/TextManipulations.css');
+    this.resetBodyToOriginalContent();
+    this.findWordsAndTextNodes();
+    this.addSpanNodesAroundWords();
+    this.innerHTMLWithSpans = document.getElementsByTagName("body")[0].innerHTML;
+    this.initialize = false;
+}
+
+CSSWordAnimator.prototype.resetBodyToOriginalContent = function()
+{
+	// This is called only once, when CSSAnimator is setup.
+	if(document.getElementsByTagName("body").length == 0)
+	{
+		Logger.Block("There is no body to resetHTML.");
+	}
+	document.getElementsByTagName("body")[0].innerHTML = originalHTMLContentOfBody;
+}
+
+CSSWordAnimator.prototype.resetBodyToContentWithSpans = function()
+{
+	// This is called only once, when CSSAnimator is setup.
+	if(document.getElementsByTagName("body").length == 0)
+	{
+		Logger.Block("There is no body to resetBodyToContentWithSpans.");
+	}
+	document.getElementsByTagName("body")[0].innerHTML = this.innerHTMLWithSpans;
+}
+
+CSSWordAnimator.prototype.theCurrentCSS = function ()
+{
+    return this.currentCSS;
+}
+
+CSSWordAnimator.prototype.apply = function (mode)
+{
+    if (this.initialize === true)
+    {
+        this.setup();
+    }
+    this.resetBodyToContentWithSpans();
+    this.applyEffect(mode);
+    this.currentCSS = mode;
+}
+
+CSSWordAnimator.prototype.remove = function (mode)
+{
+    try
+    {
+        if (this.currentCSS != mode)
+        {
+            logger.Block("CSS can't be removed");
+        }
+        if (this.initialize === false)
+        {
+            this.removeEffect(mode);
+        }
+        this.currentCSS = "none";
+        this.resetBodyToOriginalContent();
+    }
+    catch (err)
+    {
+        logger.Block("Error in : remove!" + err.message);
+    }
+}
+
+CSSWordAnimator.prototype.injectCSS = function (url)
+{
+    try
+    {
+        logger.LogToConsole("injectCSS");
+        if (!$('link[href="' + url + '"]')
+            .length)
+        {
+            $('head')
+                .html($('head')
+                    .html() + '<link rel="stylesheet" type="text/css" href="' + url + '" type="text/css" />');
+        }
+    }
+    catch (err)
+    {
+        logger.Block("Error in : injectingCSS!" + err.message);
+    }
+}
+
+CSSWordAnimator.prototype.addSpanAroundWord = function (word)
+{
+    try
+    {
+        if (this.IsOn === true)
+        {
+            logger.LogToConsole("Adding span for word: '" + word + "'");
+
+            var span = document.createElement("span");
+            span.className = "inTheSameLine";
+            span.setAttribute("name", this.sessionKey);
+            span.textContent = word + " ";
+
+            return span;
+        }
+    }
+    catch (err)
+    {
+        logger.Block("Error in : addingSpan!" + err.message);
+    }
+
+    return null;
+}
+
+CSSWordAnimator.prototype.findWordsAndTextNodes = function ()
+{
+    try
+    {
+        textNodes = domHelper.getTextNodesIn($("p, div, span"));
+
+        wordsInTextNodes = [];
+        for (var i = 0; i < textNodes.length; i++)
+        {
+            var node = textNodes[i];
+
+            var words = []
+
+            var re = /\w+\W*/g;
+            var match;
+            while ((match = re.exec(node.nodeValue)) != null)
+            {
+                var word = match[0];
+                //logger.LogToConsole("Word is : " + word);
+                var position = match.index;
+
+                words.push(
+                {
+                    length: word.length,
+                    position: position
+                });
+            }
+
+            wordsInTextNodes[i] = words;
+        };
+    }
+    catch (err)
+    {
+        logger.Block("Error in : findWordsAndTextNodes!" + err.message);
+    }
+}
+
+CSSWordAnimator.prototype.applyEffect = function (mode)
+{
+    try
+    {
+        logger.LogToConsole("Applying css!");
+        if (mode === "any")
+        {
+            mode = this.cssRules[helper.getRandomInt(0, this.cssRules.length - 1)];
+        }
+
+        this.currentCSS = mode;
+
+        var listOfNodesAdded = document.getElementsByName(this.sessionKey);
+        logger.LogToConsole("Total nodes to add css : " + listOfNodesAdded.length);
+
+        for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
+        {
+            listOfNodesAdded[nodeNumber].className = listOfNodesAdded[nodeNumber].className + " " + mode;
+            if (mode === "reverseWords")
+            {
+                listOfNodesAdded[nodeNumber].textContent = " " + listOfNodesAdded[nodeNumber].textContent.trim();
+            }
+        }
+    }
+    catch (err)
+    {
+        logger.Block("Error in applyEffect() " + err.message);
+    }
+}
+
+CSSWordAnimator.prototype.removeEffect = function (mode)
+{
+    try
+    {
+        logger.LogToConsole("Removing css!");
+
+        var listOfNodesAdded = document.getElementsByName(this.sessionKey);
+        logger.LogToConsole("Total nodes to remove css : " + listOfNodesAdded.length);
+
+        for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
+        {
+            logger.LogToConsole(listOfNodesAdded[nodeNumber].className);
+            if (listOfNodesAdded[nodeNumber].className.includes(mode) === true)
+            {
+                logger.LogToConsole("Replacing");
+                listOfNodesAdded[nodeNumber].className = listOfNodesAdded[nodeNumber].className.replace(mode, '');
+                if (mode === "reverseWords")
+                {
+                    listOfNodesAdded[nodeNumber].textContent = listOfNodesAdded[nodeNumber].textContent.trim() + " ";
+                }
+            }
+        }
+
+    }
+    catch (err)
+    {
+        logger.Block("Error in removeEffect() " + err.message);
+    }
+}
+
+CSSWordAnimator.prototype.addSpanNodesAroundWords = function ()
+{
+    try
+    {
+        logger.LogToConsole("Applying CSS Animations. Total textnodes are : " + textNodes.length);
+
+        for (var i = 0; i < textNodes.length; i++)
+        {
+            logger.LogToConsole("Node : " + i + " is : '" + textNodes[i].textContent + "'");
+        }
+
+        for (var i = 0; i < textNodes.length; i++)
+        {
+            var node = textNodes[i];
+            var nodeSet = [];
+            for (var j = 0; j < wordsInTextNodes[i].length; j++)
+            {
+                var wordMeta = wordsInTextNodes[i][j];
+
+                var word = node.nodeValue.slice(wordMeta.position, wordMeta.position + wordMeta.length);
 
                 if (Math.random() > this.fractionToAnimate)
                 {
@@ -608,7 +1043,7 @@ CSSAnimator.prototype.addSpanNodes = function ()
                 }
                 else
                 {
-                    var newSpanNode = this.addSpan(word);
+                    var newSpanNode = this.addSpanAroundWord(word);
                     if (newSpanNode != null)
                     {
                         nodeSet.push(newSpanNode);
@@ -654,22 +1089,22 @@ CSSAnimator.prototype.addSpanNodes = function ()
     }
     catch (err)
     {
-        logger.Block("Error in : addSpanNodes!" + err.message);
+        logger.Block("Error in : addSpanNodesAroundWords!" + err.message);
     }
 }
 
-CSSAnimator.prototype.reset = function (sessionKey)
+CSSWordAnimator.prototype.reset = function (sessionKey)
 {
     try
     {
-        var mirroredNodes = document.getElementsByClassName("mirrorTheWords");
+        var mirroredNodes = document.getElementsByClassName("reverseWords");
         for (var nodeNumber = mirroredNodes.length - 1; nodeNumber >= 0; nodeNumber--)
         {
             mirroredNodes[nodeNumber].innerText = mirroredNodes[nodeNumber].innerText.trim() + " ";
             mirroredNodes[nodeNumber].className = "";
         }
 
-        var listOfNodesAdded = document.getElementsByName(sessionKey);
+        var listOfNodesAdded = document.getElementsByName(this.sessionKey);
         logger.LogToConsole("Total nodes to be removed : " + listOfNodesAdded.length);
 
         for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
@@ -687,6 +1122,7 @@ CSSAnimator.prototype.reset = function (sessionKey)
 
             listOfNodesAdded[nodeNumber].remove();
         }
+        this.resetBodyToOriginalContent();
     }
     catch (err)
     {
@@ -700,7 +1136,8 @@ try
 {
     var helper = new Helper();
     var sessionKey = helper.getRandomInt(0, 99999999);
-    var cssAnimator = new CSSAnimator(sessionKey);
+    var CSSWordAnimator = new CSSWordAnimator(sessionKey);
+    var CSSLetterAnimator = new CSSLetterAnimator(sessionKey);
     var overlay = new Overlay();
     var messenger = new Messenger(main /*handlerForMessagesFromBackground*/);
     var logger = new Logger();
