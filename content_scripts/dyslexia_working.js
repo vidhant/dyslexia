@@ -13,73 +13,197 @@
     }), lb = { set: function (a, b, c) { return b === !1 ? r.removeAttr(a, c) : a.setAttribute(c, c), c } }, r.each(r.expr.match.bool.source.match(/\w+/g), function (a, b) { var c = mb[b] || r.find.attr; mb[b] = function (a, b, d) { var e, f, g = b.toLowerCase(); return d || (f = mb[g], mb[g] = e, e = null != c(a, b, d) ? g : null, mb[g] = f), e } }); var nb = /^(?:input|select|textarea|button)$/i, ob = /^(?:a|area)$/i; r.fn.extend({ prop: function (a, b) { return T(this, r.prop, a, b, arguments.length > 1) }, removeProp: function (a) { return this.each(function () { delete this[r.propFix[a] || a] }) } }), r.extend({ prop: function (a, b, c) { var d, e, f = a.nodeType; if (3 !== f && 8 !== f && 2 !== f) return 1 === f && r.isXMLDoc(a) || (b = r.propFix[b] || b, e = r.propHooks[b]), void 0 !== c ? e && "set" in e && void 0 !== (d = e.set(a, c, b)) ? d : a[b] = c : e && "get" in e && null !== (d = e.get(a, b)) ? d : a[b] }, propHooks: { tabIndex: { get: function (a) { var b = r.find.attr(a, "tabindex"); return b ? parseInt(b, 10) : nb.test(a.nodeName) || ob.test(a.nodeName) && a.href ? 0 : -1 } } }, propFix: { "for": "htmlFor", "class": "className" } }), o.optSelected || (r.propHooks.selected = { get: function (a) { var b = a.parentNode; return b && b.parentNode && b.parentNode.selectedIndex, null }, set: function (a) { var b = a.parentNode; b && (b.selectedIndex, b.parentNode && b.parentNode.selectedIndex) } }), r.each(["tabIndex", "readOnly", "maxLength", "cellSpacing", "cellPadding", "rowSpan", "colSpan", "useMap", "frameBorder", "contentEditable"], function () { r.propFix[this.toLowerCase()] = this }); function pb(a) { var b = a.match(L) || []; return b.join(" ") } function qb(a) { return a.getAttribute && a.getAttribute("class") || "" } r.fn.extend({ addClass: function (a) { var b, c, d, e, f, g, h, i = 0; if (r.isFunction(a)) return this.each(function (b) { r(this).addClass(a.call(this, b, qb(this))) }); if ("string" == typeof a && a) { b = a.match(L) || []; while (c = this[i++]) if (e = qb(c), d = 1 === c.nodeType && " " + pb(e) + " ") { g = 0; while (f = b[g++]) d.indexOf(" " + f + " ") < 0 && (d += f + " "); h = pb(d), e !== h && c.setAttribute("class", h) } } return this }, removeClass: function (a) { var b, c, d, e, f, g, h, i = 0; if (r.isFunction(a)) return this.each(function (b) { r(this).removeClass(a.call(this, b, qb(this))) }); if (!arguments.length) return this.attr("class", ""); if ("string" == typeof a && a) { b = a.match(L) || []; while (c = this[i++]) if (e = qb(c), d = 1 === c.nodeType && " " + pb(e) + " ") { g = 0; while (f = b[g++]) while (d.indexOf(" " + f + " ") > -1) d = d.replace(" " + f + " ", " "); h = pb(d), e !== h && c.setAttribute("class", h) } } return this }, toggleClass: function (a, b) { var c = typeof a; return "boolean" == typeof b && "string" === c ? b ? this.addClass(a) : this.removeClass(a) : r.isFunction(a) ? this.each(function (c) { r(this).toggleClass(a.call(this, c, qb(this), b), b) }) : this.each(function () { var b, d, e, f; if ("string" === c) { d = 0, e = r(this), f = a.match(L) || []; while (b = f[d++]) e.hasClass(b) ? e.removeClass(b) : e.addClass(b) } else void 0 !== a && "boolean" !== c || (b = qb(this), b && W.set(this, "__className__", b), this.setAttribute && this.setAttribute("class", b || a === !1 ? "" : W.get(this, "__className__") || "")) }) }, hasClass: function (a) { var b, c, d = 0; b = " " + a + " "; while (c = this[d++]) if (1 === c.nodeType && (" " + pb(qb(c)) + " ").indexOf(b) > -1) return !0; return !1 } }); var rb = /\r/g; r.fn.extend({ val: function (a) { var b, c, d, e = this[0]; { if (arguments.length) return d = r.isFunction(a), this.each(function (c) { var e; 1 === this.nodeType && (e = d ? a.call(this, c, r(this).val()) : a, null == e ? e = "" : "number" == typeof e ? e += "" : Array.isArray(e) && (e = r.map(e, function (a) { return null == a ? "" : a + "" })), b = r.valHooks[this.type] || r.valHooks[this.nodeName.toLowerCase()], b && "set" in b && void 0 !== b.set(this, e, "value") || (this.value = e)) }); if (e) return b = r.valHooks[e.type] || r.valHooks[e.nodeName.toLowerCase()], b && "get" in b && void 0 !== (c = b.get(e, "value")) ? c : (c = e.value, "string" == typeof c ? c.replace(rb, "") : null == c ? "" : c) } } }), r.extend({ valHooks: { option: { get: function (a) { var b = r.find.attr(a, "value"); return null != b ? b : pb(r.text(a)) } }, select: { get: function (a) { var b, c, d, e = a.options, f = a.selectedIndex, g = "select-one" === a.type, h = g ? null : [], i = g ? f + 1 : e.length; for (d = f < 0 ? i : g ? f : 0; d < i; d++) if (c = e[d], (c.selected || d === f) && !c.disabled && (!c.parentNode.disabled || !B(c.parentNode, "optgroup"))) { if (b = r(c).val(), g) return b; h.push(b) } return h }, set: function (a, b) { var c, d, e = a.options, f = r.makeArray(b), g = e.length; while (g--) d = e[g], (d.selected = r.inArray(r.valHooks.option.get(d), f) > -1) && (c = !0); return c || (a.selectedIndex = -1), f } } } }), r.each(["radio", "checkbox"], function () { r.valHooks[this] = { set: function (a, b) { if (Array.isArray(b)) return a.checked = r.inArray(r(a).val(), b) > -1 } }, o.checkOn || (r.valHooks[this].get = function (a) { return null === a.getAttribute("value") ? "on" : a.value }) }); var sb = /^(?:focusinfocus|focusoutblur)$/; r.extend(r.event, { trigger: function (b, c, e, f) { var g, h, i, j, k, m, n, o = [e || d], p = l.call(b, "type") ? b.type : b, q = l.call(b, "namespace") ? b.namespace.split(".") : []; if (h = i = e = e || d, 3 !== e.nodeType && 8 !== e.nodeType && !sb.test(p + r.event.triggered) && (p.indexOf(".") > -1 && (q = p.split("."), p = q.shift(), q.sort()), k = p.indexOf(":") < 0 && "on" + p, b = b[r.expando] ? b : new r.Event(p, "object" == typeof b && b), b.isTrigger = f ? 2 : 3, b.namespace = q.join("."), b.rnamespace = b.namespace ? new RegExp("(^|\\.)" + q.join("\\.(?:.*\\.|)") + "(\\.|$)") : null, b.result = void 0, b.target || (b.target = e), c = null == c ? [b] : r.makeArray(c, [b]), n = r.event.special[p] || {}, f || !n.trigger || n.trigger.apply(e, c) !== !1)) { if (!f && !n.noBubble && !r.isWindow(e)) { for (j = n.delegateType || p, sb.test(j + p) || (h = h.parentNode) ; h; h = h.parentNode) o.push(h), i = h; i === (e.ownerDocument || d) && o.push(i.defaultView || i.parentWindow || a) } g = 0; while ((h = o[g++]) && !b.isPropagationStopped()) b.type = g > 1 ? j : n.bindType || p, m = (W.get(h, "events") || {})[b.type] && W.get(h, "handle"), m && m.apply(h, c), m = k && h[k], m && m.apply && U(h) && (b.result = m.apply(h, c), b.result === !1 && b.preventDefault()); return b.type = p, f || b.isDefaultPrevented() || n._default && n._default.apply(o.pop(), c) !== !1 || !U(e) || k && r.isFunction(e[p]) && !r.isWindow(e) && (i = e[k], i && (e[k] = null), r.event.triggered = p, e[p](), r.event.triggered = void 0, i && (e[k] = i)), b.result } }, simulate: function (a, b, c) { var d = r.extend(new r.Event, c, { type: a, isSimulated: !0 }); r.event.trigger(d, null, b) } }), r.fn.extend({ trigger: function (a, b) { return this.each(function () { r.event.trigger(a, b, this) }) }, triggerHandler: function (a, b) { var c = this[0]; if (c) return r.event.trigger(a, b, c, !0) } }), r.each("blur focus focusin focusout resize scroll click dblclick mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave change select submit keydown keypress keyup contextmenu".split(" "), function (a, b) { r.fn[b] = function (a, c) { return arguments.length > 0 ? this.on(b, null, a, c) : this.trigger(b) } }), r.fn.extend({ hover: function (a, b) { return this.mouseenter(a).mouseleave(b || a) } }), o.focusin = "onfocusin" in a, o.focusin || r.each({ focus: "focusin", blur: "focusout" }, function (a, b) { var c = function (a) { r.event.simulate(b, a.target, r.event.fix(a)) }; r.event.special[b] = { setup: function () { var d = this.ownerDocument || this, e = W.access(d, b); e || d.addEventListener(a, c, !0), W.access(d, b, (e || 0) + 1) }, teardown: function () { var d = this.ownerDocument || this, e = W.access(d, b) - 1; e ? W.access(d, b, e) : (d.removeEventListener(a, c, !0), W.remove(d, b)) } } }); var tb = a.location, ub = r.now(), vb = /\?/; r.parseXML = function (b) { var c; if (!b || "string" != typeof b) return null; try { c = (new a.DOMParser).parseFromString(b, "text/xml") } catch (d) { c = void 0 } return c && !c.getElementsByTagName("parsererror").length || r.error("Invalid XML: " + b), c }; var wb = /\[\]$/, xb = /\r?\n/g, yb = /^(?:submit|button|image|reset|file)$/i, zb = /^(?:input|select|textarea|keygen)/i; function Ab(a, b, c, d) { var e; if (Array.isArray(b)) r.each(b, function (b, e) { c || wb.test(a) ? d(a, e) : Ab(a + "[" + ("object" == typeof e && null != e ? b : "") + "]", e, c, d) }); else if (c || "object" !== r.type(b)) d(a, b); else for (e in b) Ab(a + "[" + e + "]", b[e], c, d) } r.param = function (a, b) { var c, d = [], e = function (a, b) { var c = r.isFunction(b) ? b() : b; d[d.length] = encodeURIComponent(a) + "=" + encodeURIComponent(null == c ? "" : c) }; if (Array.isArray(a) || a.jquery && !r.isPlainObject(a)) r.each(a, function () { e(this.name, this.value) }); else for (c in a) Ab(c, a[c], b, e); return d.join("&") }, r.fn.extend({ serialize: function () { return r.param(this.serializeArray()) }, serializeArray: function () { return this.map(function () { var a = r.prop(this, "elements"); return a ? r.makeArray(a) : this }).filter(function () { var a = this.type; return this.name && !r(this).is(":disabled") && zb.test(this.nodeName) && !yb.test(a) && (this.checked || !ja.test(a)) }).map(function (a, b) { var c = r(this).val(); return null == c ? null : Array.isArray(c) ? r.map(c, function (a) { return { name: b.name, value: a.replace(xb, "\r\n") } }) : { name: b.name, value: c.replace(xb, "\r\n") } }).get() } }); var Bb = /%20/g, Cb = /#.*$/, Db = /([?&])_=[^&]*/, Eb = /^(.*?):[ \t]*([^\r\n]*)$/gm, Fb = /^(?:about|app|app-storage|.+-extension|file|res|widget):$/, Gb = /^(?:GET|HEAD)$/, Hb = /^\/\//, Ib = {}, Jb = {}, Kb = "*/".concat("*"), Lb = d.createElement("a"); Lb.href = tb.href; function Mb(a) { return function (b, c) { "string" != typeof b && (c = b, b = "*"); var d, e = 0, f = b.toLowerCase().match(L) || []; if (r.isFunction(c)) while (d = f[e++]) "+" === d[0] ? (d = d.slice(1) || "*", (a[d] = a[d] || []).unshift(c)) : (a[d] = a[d] || []).push(c) } } function Nb(a, b, c, d) { var e = {}, f = a === Jb; function g(h) { var i; return e[h] = !0, r.each(a[h] || [], function (a, h) { var j = h(b, c, d); return "string" != typeof j || f || e[j] ? f ? !(i = j) : void 0 : (b.dataTypes.unshift(j), g(j), !1) }), i } return g(b.dataTypes[0]) || !e["*"] && g("*") } function Ob(a, b) { var c, d, e = r.ajaxSettings.flatOptions || {}; for (c in b) void 0 !== b[c] && ((e[c] ? a : d || (d = {}))[c] = b[c]); return d && r.extend(!0, a, d), a } function Pb(a, b, c) { var d, e, f, g, h = a.contents, i = a.dataTypes; while ("*" === i[0]) i.shift(), void 0 === d && (d = a.mimeType || b.getResponseHeader("Content-Type")); if (d) for (e in h) if (h[e] && h[e].test(d)) { i.unshift(e); break } if (i[0] in c) f = i[0]; else { for (e in c) { if (!i[0] || a.converters[e + " " + i[0]]) { f = e; break } g || (g = e) } f = f || g } if (f) return f !== i[0] && i.unshift(f), c[f] } function Qb(a, b, c, d) { var e, f, g, h, i, j = {}, k = a.dataTypes.slice(); if (k[1]) for (g in a.converters) j[g.toLowerCase()] = a.converters[g]; f = k.shift(); while (f) if (a.responseFields[f] && (c[a.responseFields[f]] = b), !i && d && a.dataFilter && (b = a.dataFilter(b, a.dataType)), i = f, f = k.shift()) if ("*" === f) f = i; else if ("*" !== i && i !== f) { if (g = j[i + " " + f] || j["* " + f], !g) for (e in j) if (h = e.split(" "), h[1] === f && (g = j[i + " " + h[0]] || j["* " + h[0]])) { g === !0 ? g = j[e] : j[e] !== !0 && (f = h[0], k.unshift(h[1])); break } if (g !== !0) if (g && a["throws"]) b = g(b); else try { b = g(b) } catch (l) { return { state: "parsererror", error: g ? l : "No conversion from " + i + " to " + f } } } return { state: "success", data: b } } r.extend({ active: 0, lastModified: {}, etag: {}, ajaxSettings: { url: tb.href, type: "GET", isLocal: Fb.test(tb.protocol), global: !0, processData: !0, async: !0, contentType: "application/x-www-form-urlencoded; charset=UTF-8", accepts: { "*": Kb, text: "text/plain", html: "text/html", xml: "application/xml, text/xml", json: "application/json, text/javascript" }, contents: { xml: /\bxml\b/, html: /\bhtml/, json: /\bjson\b/ }, responseFields: { xml: "responseXML", text: "responseText", json: "responseJSON" }, converters: { "* text": String, "text html": !0, "text json": JSON.parse, "text xml": r.parseXML }, flatOptions: { url: !0, context: !0 } }, ajaxSetup: function (a, b) { return b ? Ob(Ob(a, r.ajaxSettings), b) : Ob(r.ajaxSettings, a) }, ajaxPrefilter: Mb(Ib), ajaxTransport: Mb(Jb), ajax: function (b, c) { "object" == typeof b && (c = b, b = void 0), c = c || {}; var e, f, g, h, i, j, k, l, m, n, o = r.ajaxSetup({}, c), p = o.context || o, q = o.context && (p.nodeType || p.jquery) ? r(p) : r.event, s = r.Deferred(), t = r.Callbacks("once memory"), u = o.statusCode || {}, v = {}, w = {}, x = "canceled", y = { readyState: 0, getResponseHeader: function (a) { var b; if (k) { if (!h) { h = {}; while (b = Eb.exec(g)) h[b[1].toLowerCase()] = b[2] } b = h[a.toLowerCase()] } return null == b ? null : b }, getAllResponseHeaders: function () { return k ? g : null }, setRequestHeader: function (a, b) { return null == k && (a = w[a.toLowerCase()] = w[a.toLowerCase()] || a, v[a] = b), this }, overrideMimeType: function (a) { return null == k && (o.mimeType = a), this }, statusCode: function (a) { var b; if (a) if (k) y.always(a[y.status]); else for (b in a) u[b] = [u[b], a[b]]; return this }, abort: function (a) { var b = a || x; return e && e.abort(b), A(0, b), this } }; if (s.promise(y), o.url = ((b || o.url || tb.href) + "").replace(Hb, tb.protocol + "//"), o.type = c.method || c.type || o.method || o.type, o.dataTypes = (o.dataType || "*").toLowerCase().match(L) || [""], null == o.crossDomain) { j = d.createElement("a"); try { j.href = o.url, j.href = j.href, o.crossDomain = Lb.protocol + "//" + Lb.host != j.protocol + "//" + j.host } catch (z) { o.crossDomain = !0 } } if (o.data && o.processData && "string" != typeof o.data && (o.data = r.param(o.data, o.traditional)), Nb(Ib, o, c, y), k) return y; l = r.event && o.global, l && 0 === r.active++ && r.event.trigger("ajaxStart"), o.type = o.type.toUpperCase(), o.hasContent = !Gb.test(o.type), f = o.url.replace(Cb, ""), o.hasContent ? o.data && o.processData && 0 === (o.contentType || "").indexOf("application/x-www-form-urlencoded") && (o.data = o.data.replace(Bb, "+")) : (n = o.url.slice(f.length), o.data && (f += (vb.test(f) ? "&" : "?") + o.data, delete o.data), o.cache === !1 && (f = f.replace(Db, "$1"), n = (vb.test(f) ? "&" : "?") + "_=" + ub++ + n), o.url = f + n), o.ifModified && (r.lastModified[f] && y.setRequestHeader("If-Modified-Since", r.lastModified[f]), r.etag[f] && y.setRequestHeader("If-None-Match", r.etag[f])), (o.data && o.hasContent && o.contentType !== !1 || c.contentType) && y.setRequestHeader("Content-Type", o.contentType), y.setRequestHeader("Accept", o.dataTypes[0] && o.accepts[o.dataTypes[0]] ? o.accepts[o.dataTypes[0]] + ("*" !== o.dataTypes[0] ? ", " + Kb + "; q=0.01" : "") : o.accepts["*"]); for (m in o.headers) y.setRequestHeader(m, o.headers[m]); if (o.beforeSend && (o.beforeSend.call(p, y, o) === !1 || k)) return y.abort(); if (x = "abort", t.add(o.complete), y.done(o.success), y.fail(o.error), e = Nb(Jb, o, c, y)) { if (y.readyState = 1, l && q.trigger("ajaxSend", [y, o]), k) return y; o.async && o.timeout > 0 && (i = a.setTimeout(function () { y.abort("timeout") }, o.timeout)); try { k = !1, e.send(v, A) } catch (z) { if (k) throw z; A(-1, z) } } else A(-1, "No Transport"); function A(b, c, d, h) { var j, m, n, v, w, x = c; k || (k = !0, i && a.clearTimeout(i), e = void 0, g = h || "", y.readyState = b > 0 ? 4 : 0, j = b >= 200 && b < 300 || 304 === b, d && (v = Pb(o, y, d)), v = Qb(o, v, y, j), j ? (o.ifModified && (w = y.getResponseHeader("Last-Modified"), w && (r.lastModified[f] = w), w = y.getResponseHeader("etag"), w && (r.etag[f] = w)), 204 === b || "HEAD" === o.type ? x = "nocontent" : 304 === b ? x = "notmodified" : (x = v.state, m = v.data, n = v.error, j = !n)) : (n = x, !b && x || (x = "error", b < 0 && (b = 0))), y.status = b, y.statusText = (c || x) + "", j ? s.resolveWith(p, [m, x, y]) : s.rejectWith(p, [y, x, n]), y.statusCode(u), u = void 0, l && q.trigger(j ? "ajaxSuccess" : "ajaxError", [y, o, j ? m : n]), t.fireWith(p, [y, x]), l && (q.trigger("ajaxComplete", [y, o]), --r.active || r.event.trigger("ajaxStop"))) } return y }, getJSON: function (a, b, c) { return r.get(a, b, c, "json") }, getScript: function (a, b) { return r.get(a, void 0, b, "script") } }), r.each(["get", "post"], function (a, b) { r[b] = function (a, c, d, e) { return r.isFunction(c) && (e = e || d, d = c, c = void 0), r.ajax(r.extend({ url: a, type: b, dataType: e, data: c, success: d }, r.isPlainObject(a) && a)) } }), r._evalUrl = function (a) { return r.ajax({ url: a, type: "GET", dataType: "script", cache: !0, async: !1, global: !1, "throws": !0 }) }, r.fn.extend({ wrapAll: function (a) { var b; return this[0] && (r.isFunction(a) && (a = a.call(this[0])), b = r(a, this[0].ownerDocument).eq(0).clone(!0), this[0].parentNode && b.insertBefore(this[0]), b.map(function () { var a = this; while (a.firstElementChild) a = a.firstElementChild; return a }).append(this)), this }, wrapInner: function (a) { return r.isFunction(a) ? this.each(function (b) { r(this).wrapInner(a.call(this, b)) }) : this.each(function () { var b = r(this), c = b.contents(); c.length ? c.wrapAll(a) : b.append(a) }) }, wrap: function (a) { var b = r.isFunction(a); return this.each(function (c) { r(this).wrapAll(b ? a.call(this, c) : a) }) }, unwrap: function (a) { return this.parent(a).not("body").each(function () { r(this).replaceWith(this.childNodes) }), this } }), r.expr.pseudos.hidden = function (a) { return !r.expr.pseudos.visible(a) }, r.expr.pseudos.visible = function (a) { return !!(a.offsetWidth || a.offsetHeight || a.getClientRects().length) }, r.ajaxSettings.xhr = function () { try { return new a.XMLHttpRequest } catch (b) { } }; var Rb = { 0: 200, 1223: 204 }, Sb = r.ajaxSettings.xhr(); o.cors = !!Sb && "withCredentials" in Sb, o.ajax = Sb = !!Sb, r.ajaxTransport(function (b) { var c, d; if (o.cors || Sb && !b.crossDomain) return { send: function (e, f) { var g, h = b.xhr(); if (h.open(b.type, b.url, b.async, b.username, b.password), b.xhrFields) for (g in b.xhrFields) h[g] = b.xhrFields[g]; b.mimeType && h.overrideMimeType && h.overrideMimeType(b.mimeType), b.crossDomain || e["X-Requested-With"] || (e["X-Requested-With"] = "XMLHttpRequest"); for (g in e) h.setRequestHeader(g, e[g]); c = function (a) { return function () { c && (c = d = h.onload = h.onerror = h.onabort = h.onreadystatechange = null, "abort" === a ? h.abort() : "error" === a ? "number" != typeof h.status ? f(0, "error") : f(h.status, h.statusText) : f(Rb[h.status] || h.status, h.statusText, "text" !== (h.responseType || "text") || "string" != typeof h.responseText ? { binary: h.response } : { text: h.responseText }, h.getAllResponseHeaders())) } }, h.onload = c(), d = h.onerror = c("error"), void 0 !== h.onabort ? h.onabort = d : h.onreadystatechange = function () { 4 === h.readyState && a.setTimeout(function () { c && d() }) }, c = c("abort"); try { h.send(b.hasContent && b.data || null) } catch (i) { if (c) throw i } }, abort: function () { c && c() } } }), r.ajaxPrefilter(function (a) { a.crossDomain && (a.contents.script = !1) }), r.ajaxSetup({ accepts: { script: "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript" }, contents: { script: /\b(?:java|ecma)script\b/ }, converters: { "text script": function (a) { return r.globalEval(a), a } } }), r.ajaxPrefilter("script", function (a) { void 0 === a.cache && (a.cache = !1), a.crossDomain && (a.type = "GET") }), r.ajaxTransport("script", function (a) { if (a.crossDomain) { var b, c; return { send: function (e, f) { b = r("<script>").prop({ charset: a.scriptCharset, src: a.url }).on("load error", c = function (a) { b.remove(), c = null, a && f("error" === a.type ? 404 : 200, a.type) }), d.head.appendChild(b[0]) }, abort: function () { c && c() } } } }); var Tb = [], Ub = /(=)\?(?=&|$)|\?\?/; r.ajaxSetup({ jsonp: "callback", jsonpCallback: function () { var a = Tb.pop() || r.expando + "_" + ub++; return this[a] = !0, a } }), r.ajaxPrefilter("json jsonp", function (b, c, d) { var e, f, g, h = b.jsonp !== !1 && (Ub.test(b.url) ? "url" : "string" == typeof b.data && 0 === (b.contentType || "").indexOf("application/x-www-form-urlencoded") && Ub.test(b.data) && "data"); if (h || "jsonp" === b.dataTypes[0]) return e = b.jsonpCallback = r.isFunction(b.jsonpCallback) ? b.jsonpCallback() : b.jsonpCallback, h ? b[h] = b[h].replace(Ub, "$1" + e) : b.jsonp !== !1 && (b.url += (vb.test(b.url) ? "&" : "?") + b.jsonp + "=" + e), b.converters["script json"] = function () { return g || r.error(e + " was not called"), g[0] }, b.dataTypes[0] = "json", f = a[e], a[e] = function () { g = arguments }, d.always(function () { void 0 === f ? r(a).removeProp(e) : a[e] = f, b[e] && (b.jsonpCallback = c.jsonpCallback, Tb.push(e)), g && r.isFunction(f) && f(g[0]), g = f = void 0 }), "script" }), o.createHTMLDocument = function () { var a = d.implementation.createHTMLDocument("").body; return a.innerHTML = "<form></form><form></form>", 2 === a.childNodes.length }(), r.parseHTML = function (a, b, c) { if ("string" != typeof a) return []; "boolean" == typeof b && (c = b, b = !1); var e, f, g; return b || (o.createHTMLDocument ? (b = d.implementation.createHTMLDocument(""), e = b.createElement("base"), e.href = d.location.href, b.head.appendChild(e)) : b = d), f = C.exec(a), g = !c && [], f ? [b.createElement(f[1])] : (f = qa([a], b, g), g && g.length && r(g).remove(), r.merge([], f.childNodes)) }, r.fn.load = function (a, b, c) { var d, e, f, g = this, h = a.indexOf(" "); return h > -1 && (d = pb(a.slice(h)), a = a.slice(0, h)), r.isFunction(b) ? (c = b, b = void 0) : b && "object" == typeof b && (e = "POST"), g.length > 0 && r.ajax({ url: a, type: e || "GET", dataType: "html", data: b }).done(function (a) { f = arguments, g.html(d ? r("<div>").append(r.parseHTML(a)).find(d) : a) }).always(c && function (a, b) { g.each(function () { c.apply(this, f || [a.responseText, b, a]) }) }), this }, r.each(["ajaxStart", "ajaxStop", "ajaxComplete", "ajaxError", "ajaxSuccess", "ajaxSend"], function (a, b) { r.fn[b] = function (a) { return this.on(b, a) } }), r.expr.pseudos.animated = function (a) { return r.grep(r.timers, function (b) { return a === b.elem }).length }, r.offset = { setOffset: function (a, b, c) { var d, e, f, g, h, i, j, k = r.css(a, "position"), l = r(a), m = {}; "static" === k && (a.style.position = "relative"), h = l.offset(), f = r.css(a, "top"), i = r.css(a, "left"), j = ("absolute" === k || "fixed" === k) && (f + i).indexOf("auto") > -1, j ? (d = l.position(), g = d.top, e = d.left) : (g = parseFloat(f) || 0, e = parseFloat(i) || 0), r.isFunction(b) && (b = b.call(a, c, r.extend({}, h))), null != b.top && (m.top = b.top - h.top + g), null != b.left && (m.left = b.left - h.left + e), "using" in b ? b.using.call(a, m) : l.css(m) } }, r.fn.extend({ offset: function (a) { if (arguments.length) return void 0 === a ? this : this.each(function (b) { r.offset.setOffset(this, a, b) }); var b, c, d, e, f = this[0]; if (f) return f.getClientRects().length ? (d = f.getBoundingClientRect(), b = f.ownerDocument, c = b.documentElement, e = b.defaultView, { top: d.top + e.pageYOffset - c.clientTop, left: d.left + e.pageXOffset - c.clientLeft }) : { top: 0, left: 0 } }, position: function () { if (this[0]) { var a, b, c = this[0], d = { top: 0, left: 0 }; return "fixed" === r.css(c, "position") ? b = c.getBoundingClientRect() : (a = this.offsetParent(), b = this.offset(), B(a[0], "html") || (d = a.offset()), d = { top: d.top + r.css(a[0], "borderTopWidth", !0), left: d.left + r.css(a[0], "borderLeftWidth", !0) }), { top: b.top - d.top - r.css(c, "marginTop", !0), left: b.left - d.left - r.css(c, "marginLeft", !0) } } }, offsetParent: function () { return this.map(function () { var a = this.offsetParent; while (a && "static" === r.css(a, "position")) a = a.offsetParent; return a || ra }) } }), r.each({ scrollLeft: "pageXOffset", scrollTop: "pageYOffset" }, function (a, b) { var c = "pageYOffset" === b; r.fn[a] = function (d) { return T(this, function (a, d, e) { var f; return r.isWindow(a) ? f = a : 9 === a.nodeType && (f = a.defaultView), void 0 === e ? f ? f[b] : a[d] : void (f ? f.scrollTo(c ? f.pageXOffset : e, c ? e : f.pageYOffset) : a[d] = e) }, a, d, arguments.length) } }), r.each(["top", "left"], function (a, b) { r.cssHooks[b] = Pa(o.pixelPosition, function (a, c) { if (c) return c = Oa(a, b), Ma.test(c) ? r(a).position()[b] + "px" : c }) }), r.each({ Height: "height", Width: "width" }, function (a, b) { r.each({ padding: "inner" + a, content: b, "": "outer" + a }, function (c, d) { r.fn[d] = function (e, f) { var g = arguments.length && (c || "boolean" != typeof e), h = c || (e === !0 || f === !0 ? "margin" : "border"); return T(this, function (b, c, e) { var f; return r.isWindow(b) ? 0 === d.indexOf("outer") ? b["inner" + a] : b.document.documentElement["client" + a] : 9 === b.nodeType ? (f = b.documentElement, Math.max(b.body["scroll" + a], f["scroll" + a], b.body["offset" + a], f["offset" + a], f["client" + a])) : void 0 === e ? r.css(b, c, h) : r.style(b, c, e, h) }, b, g ? e : void 0, g) } }) }), r.fn.extend({ bind: function (a, b, c) { return this.on(a, null, b, c) }, unbind: function (a, b) { return this.off(a, null, b) }, delegate: function (a, b, c, d) { return this.on(b, a, c, d) }, undelegate: function (a, b, c) { return 1 === arguments.length ? this.off(a, "**") : this.off(b, a || "**", c) }, holdReady: function (a) { a ? r.readyWait++ : r.ready(!0) } }), r.isArray = Array.isArray, r.parseJSON = JSON.parse, r.nodeName = B, "function" == typeof define && define.amd && define("jquery", [], function () { return r }); var Vb = a.jQuery, Wb = a.$; return r.noConflict = function (b) { return a.$ === r && (a.$ = Wb), b && a.jQuery === r && (a.jQuery = Vb), r }, b || (a.jQuery = a.$ = r), r
 });
 
+var currentMode = "";
+var originalHTMLContentOfBody = undefined;
+var originalTextContentOfBody = undefined;
+
 function main(request, sender, sendResponse)
 {
     try
     {
         var start = new Date().getTime();
-        overlay.showOverlay();
 
-        if (request.mode === "requestingInitialization")
+        if(originalHTMLContentOfBody === undefined)
         {
-            sendResponse({
-                responseType: "responseToRequestingInitialization",
-                cssModes: cssAnimator.cssRules,
-                currentCSSMode: cssAnimator.currentCSS,
-                isFlickerActive: wordJumbler.isActive,
-                flickerInterval: wordJumbler.jumblingIntervalInMilliseconds,
-                flickerAnimationProbability: wordJumbler.fractionOfNodesToAnimate
-            });
-        }
-        else if (request.mode === "clear")
-        {
-            // Call Reset of all
-            cssAnimator.reset(sessionKey);
-        }
-        else if (request.mode === "flicker")
-        {
-            wordJumbler.flicker();
-        }
-        else
-        {
-            if (request.action === "apply")
-            {
-                cssAnimator.apply(request.mode);
-            }
-            else
-            {
-                cssAnimator.remove(request.mode);
-            }
+        	originalHTMLContentOfBody = document.getElementsByTagName("body")[0].innerHTML;
         }
 
-        overlay.hideOverlay();
+        if(originalTextContentOfBody === undefined)
+        {
+        	originalTextContentOfBody = document.getElementsByTagName("body")[0].innerText;
+        }        
+
+        switch(request.type)
+        {
+        	case "getCurrentMode":
+        	{
+        		sendResponse({ 
+        			responseType: "responseToGetCurrentMode",
+        			currentMode: currentMode
+        		});
+            	break;
+        	}
+        	case "applyMode":
+        	{
+        		if(request.mode != currentMode)
+        		{
+	        		switch(request.mode)
+	        		{
+	        			case "shuffle":
+	        			{
+	        				wordJumbler.flicker();
+	        				currentMode = "shuffle";
+	        				sendResponse({ 
+				        			responseType: "statusResponse",
+				        			status: "Applied"
+				        	});
+	        				break;
+	        			}
+	        			case "similarShapedLetters":
+	        			{
+	        				similarShapedLettersAnimator.apply();
+	        				currentMode = "similarShapedLetters";
+	        				sendResponse({ 
+				        			responseType: "statusResponse",
+				        			status: "Applied"
+				        	});	        				
+	        				break;
+	        			}
+	        			case "upsideDownLetters":
+	        			{
+							CSSLetterAnimator.apply("upsideDownLetters");
+							currentMode = "upsideDownLetters";
+	        				sendResponse({ 
+				        			responseType: "statusResponse",
+				        			status: "Applied"
+				        	});							
+	        				break;
+	        			}
+	        			case "mirroredLetters":
+	        			{
+							CSSLetterAnimator.apply("mirroredLetters");
+							currentMode = "mirroredLetters";
+	        				sendResponse({ 
+				        			responseType: "statusResponse",
+				        			status: "Applied"
+				        	});							
+	        				break;
+	        			}
+	        			case "reverseWords":
+	        			{
+							CSSWordAnimator.apply("reverseWords");
+							currentMode="reverseWords";
+	        				sendResponse({ 
+				        			responseType: "statusResponse",
+				        			status: "Applied"
+				        	});							
+	        				break;
+	        			}
+	        			case "poppingWords":
+	        			{
+							CSSWordAnimator.apply("bounceAndZoomInZoomOut");
+							currentMode="poppingWords";
+	        				sendResponse({ 
+				        			responseType: "statusResponse",
+				        			status: "Applied"
+				        	});							
+	        				break;
+	        			}
+	        			default:
+	        			{
+	        				break;
+	        			}            			    			        			
+	        		}
+        		}
+        		break;
+        	}
+        	case "removeMode":
+        	{
+        		switch(request.mode)
+        		{
+        			case "shuffle":
+        			{
+        				wordJumbler.stop();
+        				currentMode = "";
+        				sendResponse({ 
+			        			responseType: "statusResponse",
+			        			status: "Removed"
+			        	});
+        				break;
+        			}
+        			case "similarShapedLetters":
+        			{
+        				similarShapedLettersAnimator.remove();
+        				sendResponse({ 
+			        			responseType: "statusResponse",
+			        			status: "Removed"
+			        	});        				
+        				break;
+        			}
+        			case "upsideDownLetters":
+        			{
+						CSSLetterAnimator.remove("upsideDownLetters");
+        				currentMode = "";
+        				sendResponse({ 
+			        			responseType: "statusResponse",
+			        			status: "Removed"
+			        	});        				
+        				break;
+        			}
+        			case "mirroredLetters":
+        			{
+						CSSLetterAnimator.remove("mirroredLetters");
+        				currentMode = "";
+        				sendResponse({ 
+			        			responseType: "statusResponse",
+			        			status: "Removed"
+			        	});        				
+        				break;
+        			}
+        			case "reverseWords":
+        			{
+						CSSWordAnimator.remove("reverseWords");
+        				currentMode = "";
+        				sendResponse({ 
+			        			responseType: "statusResponse",
+			        			status: "Removed"
+			        	});        				
+        				break;
+        			}
+        			case "poppingWords":
+        			{
+						CSSWordAnimator.remove("bounceAndZoomInZoomOut");
+        				currentMode = "";
+        				sendResponse({ 
+			        			responseType: "statusResponse",
+			        			status: "Removed"
+			        	});        				
+        				break;
+        			}
+        			default:
+        			{
+
+
+        				break;
+        			}            			    			        			
+        		}
+        		break;
+        	}
+        	default:
+        	{
+	            break;
+        	}
+
+        }
 
         var end = new Date().getTime();
         var time = end - start;
-        console.log('Execution time for (mode, time): ' + request.mode + " " + time);
-        sendResponse({ actionTaken: "nothing", time: time, requestedAction: "" });
+        console.log('Execution time for (mode, time): ' + request.type + " " + time);
     }
     catch (err)
     {
         logger.Block("Error in : main!" + err.message);
     }
-}
-
-/* Overlay class */
-function Overlay()
-{
-    // Thanks to http://gasparesganga.com/labs/jquery-loading-overlay/ for the script below! https://github.com/gasparesganga/jquery-loading-overlay
-    !function (A, B) { function C(C, g) { C = A(C); var E = C.is("body"), I = C.data("LoadingOverlayCount"); if (I === B && (I = 0), 0 == I) { var o = A("<div>", { class: "loadingoverlay", css: { "background-color": g.color, position: "relative", display: "flex", "flex-direction": "column", "align-items": "center", "justify-content": "center" } }); if (g.zIndex !== B && o.css("z-index", g.zIndex), g.image && o.css({ "background-image": "url(" + g.image + ")", "background-position": g.imagePosition, "background-repeat": "no-repeat" }), g.fontawesome && A("<div>", { class: "loadingoverlay_fontawesome " + g.fontawesome }).appendTo(o), g.custom && A(g.custom).appendTo(o), E ? o.css({ position: "fixed", top: 0, left: 0, width: "100%", height: "100%" }) : o.css("position", "fixed" == C.css("position") ? "fixed" : "absolute"), Q(C, o, g, E), g.resizeInterval > 0) { var w = setInterval(function () { Q(C, o, g, E) }, g.resizeInterval); C.data("LoadingOverlayResizeIntervalId", w) } g.fade ? g.fade === !0 ? g.fade = [400, 200] : "string" != typeof g.fade && "number" != typeof g.fade || (g.fade = [g.fade, g.fade]) : g.fade = [0, 0], C.data({ LoadingOverlay: o, LoadingOverlayFadeOutDuration: g.fade[1] }), o.hide().appendTo("body").fadeIn(g.fade[0]) } I++, C.data("LoadingOverlayCount", I) } function g(C, g) { C = A(C); var Q = C.data("LoadingOverlayCount"); if (Q !== B) if (Q--, g || Q <= 0) { var E = C.data("LoadingOverlayResizeIntervalId"); E && clearInterval(E), C.data("LoadingOverlay").fadeOut(C.data("LoadingOverlayFadeOutDuration"), function () { A(this).remove() }), C.removeData(["LoadingOverlay", "LoadingOverlayCount", "LoadingOverlayFadeOutDuration", "LoadingOverlayResizeIntervalId"]) } else C.data("LoadingOverlayCount", Q) } function Q(B, C, g, Q) { if (!Q) { var E = "fixed" == B.css("position") ? B.position() : B.offset(); C.css({ top: E.top + parseInt(B.css("border-top-width"), 10), left: E.left + parseInt(B.css("border-left-width"), 10), width: B.innerWidth(), height: B.innerHeight() }) } var I = Q ? A(window) : B, o = "auto"; g.size && "auto" != g.size && (o = Math.min(I.innerWidth(), I.innerHeight()) * parseFloat(g.size) / 100, g.maxSize && o > parseInt(g.maxSize, 10) && (o = parseInt(g.maxSize, 10) + "px"), g.minSize && o < parseInt(g.minSize, 10) && (o = parseInt(g.minSize, 10) + "px")), C.css("background-size", o), C.children(".loadingoverlay_fontawesome").css("font-size", o) } var E = { color: "rgba(255, 255, 255, 0.8)", custom: "", fade: !0, fontawesome: "", image: "data:image/gif;base64,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", imagePosition: "center center", maxSize: "100px", minSize: "20px", resizeInterval: 50, size: "50%", zIndex: 9999 }; A.LoadingOverlaySetup = function (B) { A.extend(!0, E, B) }, A.LoadingOverlay = function (B, Q) { switch (B.toLowerCase()) { case "show": var I = A.extend(!0, {}, E, Q); C("body", I); break; case "hide": g("body", Q) } }, A.fn.LoadingOverlay = function (B, Q) { switch (B.toLowerCase()) { case "show": var I = A.extend(!0, {}, E, Q); return this.each(function () { C(this, I) }); case "hide": return this.each(function () { g(this, Q) }) } } }(jQuery);;
-}
-
-Overlay.prototype.showOverlay = function ()
-{
-    $.LoadingOverlay("show");
-}
-
-Overlay.prototype.hideOverlay = function ()
-{
-    $.LoadingOverlay("hide");
 }
 
 /* Messenger class */
@@ -141,6 +265,18 @@ DOMHelper.prototype.getTextNodesIn = function (el)
     });
 }
 
+DOMHelper.prototype.getCopyOfCurrentBodyNode = function()
+{
+    var bodyTags = document.getElementsByTagName("body");
+    var clonedBody = (bodyTags.length != 0) ? bodyTags[0].cloneNode(false) : undefined;
+
+    if(clonedBody === undefined)
+    {
+    	Logger.Block("Can't clone the body");
+    }
+    return clonedBody;
+}
+
 
 /* Logger class */
 function Logger()
@@ -174,16 +310,28 @@ function WordJumbler()
     this.isActive = false;
 }
 
+WordJumbler.prototype.resetBodyToOriginalContent = function()
+{
+	// This is called only once, when CSSAnimator is setup.
+	if(document.getElementsByTagName("body").length == 0)
+	{
+		Logger.Block("There is no body to resetHTML.");
+	}
+	document.getElementsByTagName("body")[0].innerHTML = originalHTMLContentOfBody;
+}
+
 WordJumbler.prototype.stop = function ()
 {
     this.isActive = false;
     window.clearInterval(this.flickerIntervalListener);
+    this.resetBodyToOriginalContent();
 }
 
 WordJumbler.prototype.flicker = function ()
 {
     try
     {
+    	this.resetBodyToOriginalContent();
         logger.LogToConsole("Flicker called!!");
         var textNodes;
         var wordsInTextNodes = [];
@@ -289,6 +437,7 @@ WordJumbler.prototype.flicker = function ()
 
             }
 
+            this.fractionOfNodesToAnimate = 0.1;
             this.flickerIntervalListener = window.setInterval(repeatJumblingAnimation, this.jumblingIntervalInMilliseconds);
         }
     }
@@ -298,42 +447,77 @@ WordJumbler.prototype.flicker = function ()
     }
 }
 
-/* CSSAnimator class */
-function CSSAnimator(sessionKey)
+
+
+
+
+
+
+
+
+/* CSSLetterAnimator class */
+function CSSLetterAnimator(sessionKey)
 {
-    this.sessionKey = sessionKey;
+    this.sessionKey = sessionKey + "addedByLA";
     this.initialize = true;
     this.IsOn = true;
     this.textNodes = null;
     this.wordsInTextNodes = null;
     this.currentCSS = "none";
-    this.cssRules = ["mirrorTheLetters", "upsideDown", "blur", "zoom", "bounce", "zoomInZoomOut", "bounceAndZoomInZoomOut"];
+    this.cssRules = ["mirroredLetters", "upsideDownLetters", "bounceAndZoomInZoomOut"];
+    this.fractionOfLettersToAnimate = 0.4;
+    this.fractionOfWordsToAnimate = 0.6;
+    this.innerHTMLWithSpans = undefined;
 }
 
-CSSAnimator.prototype.setup = function ()
+CSSLetterAnimator.prototype.setup = function ()
 {
     this.injectCSS('css/TextManipulations.css');
+    this.resetBodyToOriginalContent();
     this.findWordsAndTextNodes();
-    this.addSpanNodes();
+    this.addSpanNodesAroundLetters();
+    this.innerHTMLWithSpans = document.getElementsByTagName("body")[0].innerHTML;
     this.initialize = false;
 }
 
-CSSAnimator.prototype.theCurrentCSS = function ()
+CSSLetterAnimator.prototype.resetBodyToOriginalContent = function()
+{
+	// This is called only once, when CSSAnimator is setup.
+	if(document.getElementsByTagName("body").length == 0)
+	{
+		Logger.Block("There is no body to resetHTML.");
+	}
+	document.getElementsByTagName("body")[0].innerHTML = originalHTMLContentOfBody;
+}
+
+CSSLetterAnimator.prototype.resetBodyToContentWithSpans = function()
+{
+	// This is called only once, when CSSAnimator is setup.
+	if(document.getElementsByTagName("body").length == 0)
+	{
+		Logger.Block("There is no body to resetBodyToContentWithSpans.");
+	}
+	document.getElementsByTagName("body")[0].innerHTML = this.innerHTMLWithSpans;
+}
+
+
+CSSLetterAnimator.prototype.theCurrentCSS = function ()
 {
     return this.currentCSS;
 }
 
-CSSAnimator.prototype.apply = function (mode)
+CSSLetterAnimator.prototype.apply = function (mode)
 {
     if (this.initialize === true)
     {
         this.setup();
     }
+    this.resetBodyToContentWithSpans();
     this.applyEffect(mode);
     this.currentCSS = mode;
 }
 
-CSSAnimator.prototype.remove = function (mode)
+CSSLetterAnimator.prototype.remove = function (mode)
 {
     try
     {
@@ -346,6 +530,7 @@ CSSAnimator.prototype.remove = function (mode)
             this.removeEffect(mode);
         }
         this.currentCSS = "none";
+        this.resetBodyToOriginalContent();
     }
     catch (err)
     {
@@ -353,7 +538,7 @@ CSSAnimator.prototype.remove = function (mode)
     }
 }
 
-CSSAnimator.prototype.injectCSS = function (url)
+CSSLetterAnimator.prototype.injectCSS = function (url)
 {
     try
     {
@@ -372,31 +557,31 @@ CSSAnimator.prototype.injectCSS = function (url)
     }
 }
 
-CSSAnimator.prototype.addSpan = function (word)
+CSSLetterAnimator.prototype.addSpanAroundLetter = function (letter)
 {
     try
     {
         if (this.IsOn === true)
         {
-            logger.LogToConsole("Adding span for word: '" + word + "'");
+            logger.LogToConsole("Adding span for letter: '" + letter + "'");
 
             var span = document.createElement("span");
             span.className = "inTheSameLine";
-            span.setAttribute("name", sessionKey);
-            span.textContent = word + " ";
+            span.setAttribute("name", this.sessionKey);
+            span.textContent = letter;
 
             return span;
         }
     }
     catch (err)
     {
-        logger.Block("Error in : addingSpan!" + err.message);
+        logger.Block("Error in : addingSpanAroundLetter!" + err.message);
     }
 
     return null;
 }
 
-CSSAnimator.prototype.findWordsAndTextNodes = function ()
+CSSLetterAnimator.prototype.findWordsAndTextNodes = function ()
 {
     try
     {
@@ -433,25 +618,25 @@ CSSAnimator.prototype.findWordsAndTextNodes = function ()
     }
 }
 
-CSSAnimator.prototype.applyEffect = function (mode)
+CSSLetterAnimator.prototype.applyEffect = function (mode)
 {
     try
     {
         logger.LogToConsole("Applying css!");
         if (mode === "any")
         {
-            mode = cssRules[helper.getRandomInt(0, cssRules.length - 1)];
+            mode = this.cssRules[helper.getRandomInt(0, this.cssRules.length - 1)];
         }
 
         this.currentCSS = mode;
 
-        var listOfNodesAdded = document.getElementsByName(sessionKey);
+        var listOfNodesAdded = document.getElementsByName(this.sessionKey);
         logger.LogToConsole("Total nodes to add css : " + listOfNodesAdded.length);
 
         for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
         {
             listOfNodesAdded[nodeNumber].className = listOfNodesAdded[nodeNumber].className + " " + mode;
-            if (mode === "mirrorTheLetters")
+            if (mode === "reverseWords")
             {
                 listOfNodesAdded[nodeNumber].textContent = " " + listOfNodesAdded[nodeNumber].textContent.trim();
             }
@@ -463,13 +648,13 @@ CSSAnimator.prototype.applyEffect = function (mode)
     }
 }
 
-CSSAnimator.prototype.removeEffect = function (mode)
+CSSLetterAnimator.prototype.removeEffect = function (mode)
 {
     try
     {
         logger.LogToConsole("Removing css!");
 
-        var listOfNodesAdded = document.getElementsByName(sessionKey);
+        var listOfNodesAdded = document.getElementsByName(this.sessionKey);
         logger.LogToConsole("Total nodes to remove css : " + listOfNodesAdded.length);
 
         for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
@@ -479,7 +664,7 @@ CSSAnimator.prototype.removeEffect = function (mode)
             {
                 logger.LogToConsole("Replacing");
                 listOfNodesAdded[nodeNumber].className = listOfNodesAdded[nodeNumber].className.replace(mode, '');
-                if (mode === "mirrorTheLetters")
+                if (mode === "reverseWords")
                 {
                     listOfNodesAdded[nodeNumber].textContent = listOfNodesAdded[nodeNumber].textContent.trim() + " ";
                 }
@@ -493,7 +678,7 @@ CSSAnimator.prototype.removeEffect = function (mode)
     }
 }
 
-CSSAnimator.prototype.addSpanNodes = function ()
+CSSLetterAnimator.prototype.addSpanNodesAroundLetters = function ()
 {
     try
     {
@@ -513,17 +698,385 @@ CSSAnimator.prototype.addSpanNodes = function ()
                 var wordMeta = wordsInTextNodes[i][j];
 
                 var word = node.nodeValue.slice(wordMeta.position, wordMeta.position + wordMeta.length);
-                var before = node.nodeValue.slice(0, wordMeta.position);
-                var after = node.nodeValue.slice(wordMeta.position + wordMeta.length);
 
-                if (Math.random() < 1 / 5)
+                if (Math.random() > this.fractionOfWordsToAnimate)
                 {
                     var textNode = document.createTextNode(word + " ");
                     nodeSet.push(textNode);
                 }
                 else
                 {
-                    var newSpanNode = this.addSpan(word);
+                	var doneUpto = -1;
+                	for(var k=0;k<word.length;k++)
+                	{
+        		        if (Math.random() > this.fractionOfLettersToAnimate)
+		                {
+		                    continue;
+		                }
+		                else
+		                {
+		                	var textNodeBefore = document.createTextNode(word.slice(doneUpto + 1, k));
+		                	nodeSet.push(textNodeBefore);
+		                	var newSpanNode = this.addSpanAroundLetter(word[k]);
+		                    if (newSpanNode != null)
+		                    {
+		                        nodeSet.push(newSpanNode);
+		                    }
+		                    else
+		                    {
+		                        var textNode = document.createTextNode(word[k]);
+		                        nodeSet.push(textNode);
+		                    }
+		                    doneUpto = k;
+		                    if(k==0)
+		                    {
+
+		                    }
+		                }
+                	}
+
+                	if(doneUpto + 1 != word.length)
+                	{
+                		nodeSet.push(document.createTextNode(word.slice(doneUpto + 1, word.length)));
+                	}
+                }
+            };
+
+            var whichChildIsThisTextNode = 0;
+            var currentNodeIterator = node;
+            while ((currentNodeIterator = currentNodeIterator.previousSibling) != null)
+            {
+                whichChildIsThisTextNode++;
+            }
+
+            for (var j = 0; j < nodeSet.length; j++)
+            {
+                if (nodeSet[j].nodeType === 3)
+                {
+                    logger.LogToConsole("Well, this is a text node");
+                }
+                node.parentNode.insertBefore(nodeSet[j], node);
+            }
+
+            currentNodeIterator = node;
+            var newChildNumber = 0;
+            while ((currentNodeIterator = currentNodeIterator.previousSibling) != null)
+            {
+                newChildNumber++;
+            }
+
+            if (newChildNumber != whichChildIsThisTextNode + nodeSet.length)
+            {
+
+            }
+
+            node.parentNode.removeChild(node.parentNode.childNodes[whichChildIsThisTextNode + nodeSet.length]);
+        };
+    }
+    catch (err)
+    {
+        logger.Block("Error in : addSpanNodesAroundLetters!" + err.message);
+    }
+}
+
+CSSLetterAnimator.prototype.reset = function (sessionKey)
+{
+    try
+    {
+        var mirroredNodes = document.getElementsByClassName("reverseWords");
+        for (var nodeNumber = mirroredNodes.length - 1; nodeNumber >= 0; nodeNumber--)
+        {
+            mirroredNodes[nodeNumber].innerText = mirroredNodes[nodeNumber].innerText.trim() + " ";
+            mirroredNodes[nodeNumber].className = "";
+        }
+
+        var listOfNodesAdded = document.getElementsByName(this.sessionKey);
+        logger.LogToConsole("Total nodes to be removed : " + listOfNodesAdded.length);
+
+        for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
+        {
+            logger.LogToConsole(nodeNumber);
+            var innerTextNode = document.createTextNode(listOfNodesAdded[nodeNumber].innerText);
+            logger.LogToConsole("Create the text node");
+            //listOfNodesAdded[nodeNumber].innerText);
+            listOfNodesAdded[nodeNumber].parentNode.insertBefore(innerTextNode, listOfNodesAdded[nodeNumber]);
+            logger.LogToConsole("Create and appended: " + innerTextNode.textContent);
+        }
+
+        for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
+        {
+
+            listOfNodesAdded[nodeNumber].remove();
+        }
+        this.resetBodyToOriginalContent();
+    }
+    catch (err)
+    {
+        logger.Block("Error in reset() " + err.message);
+    }
+    this.initialize = true;
+    this.currentCSS = "none";
+}
+
+
+
+
+
+
+
+
+
+
+/* CSSWordAnimator class */
+function CSSWordAnimator(sessionKey)
+{
+    this.sessionKey = sessionKey  + "addedByWA";
+    this.initialize = true;
+    this.IsOn = true;
+    this.textNodes = null;
+    this.wordsInTextNodes = null;
+    this.currentCSS = "none";
+    this.cssRules = ["reverseWords", "upsideDown", "blur", "zoom", "bounce", "zoomInZoomOut", "bounceAndZoomInZoomOut"];
+    this.fractionToAnimate = 0.4;
+    this.innerHTMLWithSpans = undefined;
+}
+
+CSSWordAnimator.prototype.setup = function ()
+{
+    this.injectCSS('css/TextManipulations.css');
+    this.resetBodyToOriginalContent();
+    this.findWordsAndTextNodes();
+    this.addSpanNodesAroundWords();
+    this.innerHTMLWithSpans = document.getElementsByTagName("body")[0].innerHTML;
+    this.initialize = false;
+}
+
+CSSWordAnimator.prototype.resetBodyToOriginalContent = function()
+{
+	// This is called only once, when CSSAnimator is setup.
+	if(document.getElementsByTagName("body").length == 0)
+	{
+		Logger.Block("There is no body to resetHTML.");
+	}
+	document.getElementsByTagName("body")[0].innerHTML = originalHTMLContentOfBody;
+}
+
+CSSWordAnimator.prototype.resetBodyToContentWithSpans = function()
+{
+	// This is called only once, when CSSAnimator is setup.
+	if(document.getElementsByTagName("body").length == 0)
+	{
+		Logger.Block("There is no body to resetBodyToContentWithSpans.");
+	}
+	document.getElementsByTagName("body")[0].innerHTML = this.innerHTMLWithSpans;
+}
+
+CSSWordAnimator.prototype.theCurrentCSS = function ()
+{
+    return this.currentCSS;
+}
+
+CSSWordAnimator.prototype.apply = function (mode)
+{
+    if (this.initialize === true)
+    {
+        this.setup();
+    }
+    this.resetBodyToContentWithSpans();
+    this.applyEffect(mode);
+    this.currentCSS = mode;
+}
+
+CSSWordAnimator.prototype.remove = function (mode)
+{
+    try
+    {
+        if (this.currentCSS != mode)
+        {
+            logger.Block("CSS can't be removed");
+        }
+        if (this.initialize === false)
+        {
+            this.removeEffect(mode);
+        }
+        this.currentCSS = "none";
+        this.resetBodyToOriginalContent();
+    }
+    catch (err)
+    {
+        logger.Block("Error in : remove!" + err.message);
+    }
+}
+
+CSSWordAnimator.prototype.injectCSS = function (url)
+{
+    try
+    {
+        logger.LogToConsole("injectCSS");
+        if (!$('link[href="' + url + '"]')
+            .length)
+        {
+            $('head')
+                .html($('head')
+                    .html() + '<link rel="stylesheet" type="text/css" href="' + url + '" type="text/css" />');
+        }
+    }
+    catch (err)
+    {
+        logger.Block("Error in : injectingCSS!" + err.message);
+    }
+}
+
+CSSWordAnimator.prototype.addSpanAroundWord = function (word)
+{
+    try
+    {
+        if (this.IsOn === true)
+        {
+            logger.LogToConsole("Adding span for word: '" + word + "'");
+
+            var span = document.createElement("span");
+            span.className = "inTheSameLine";
+            span.setAttribute("name", this.sessionKey);
+            span.textContent = word + " ";
+
+            return span;
+        }
+    }
+    catch (err)
+    {
+        logger.Block("Error in : addingSpan!" + err.message);
+    }
+
+    return null;
+}
+
+CSSWordAnimator.prototype.findWordsAndTextNodes = function ()
+{
+    try
+    {
+        textNodes = domHelper.getTextNodesIn($("p, div, span"));
+
+        wordsInTextNodes = [];
+        for (var i = 0; i < textNodes.length; i++)
+        {
+            var node = textNodes[i];
+
+            var words = []
+
+            var re = /\w+\W*/g;
+            var match;
+            while ((match = re.exec(node.nodeValue)) != null)
+            {
+                var word = match[0];
+                //logger.LogToConsole("Word is : " + word);
+                var position = match.index;
+
+                words.push(
+                {
+                    length: word.length,
+                    position: position
+                });
+            }
+
+            wordsInTextNodes[i] = words;
+        };
+    }
+    catch (err)
+    {
+        logger.Block("Error in : findWordsAndTextNodes!" + err.message);
+    }
+}
+
+CSSWordAnimator.prototype.applyEffect = function (mode)
+{
+    try
+    {
+        logger.LogToConsole("Applying css!");
+        if (mode === "any")
+        {
+            mode = this.cssRules[helper.getRandomInt(0, this.cssRules.length - 1)];
+        }
+
+        this.currentCSS = mode;
+
+        var listOfNodesAdded = document.getElementsByName(this.sessionKey);
+        logger.LogToConsole("Total nodes to add css : " + listOfNodesAdded.length);
+
+        for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
+        {
+            listOfNodesAdded[nodeNumber].className = listOfNodesAdded[nodeNumber].className + " " + mode;
+            if (mode === "reverseWords")
+            {
+                listOfNodesAdded[nodeNumber].textContent = " " + listOfNodesAdded[nodeNumber].textContent.trim();
+            }
+        }
+    }
+    catch (err)
+    {
+        logger.Block("Error in applyEffect() " + err.message);
+    }
+}
+
+CSSWordAnimator.prototype.removeEffect = function (mode)
+{
+    try
+    {
+        logger.LogToConsole("Removing css!");
+
+        var listOfNodesAdded = document.getElementsByName(this.sessionKey);
+        logger.LogToConsole("Total nodes to remove css : " + listOfNodesAdded.length);
+
+        for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
+        {
+            logger.LogToConsole(listOfNodesAdded[nodeNumber].className);
+            if (listOfNodesAdded[nodeNumber].className.includes(mode) === true)
+            {
+                logger.LogToConsole("Replacing");
+                listOfNodesAdded[nodeNumber].className = listOfNodesAdded[nodeNumber].className.replace(mode, '');
+                if (mode === "reverseWords")
+                {
+                    listOfNodesAdded[nodeNumber].textContent = listOfNodesAdded[nodeNumber].textContent.trim() + " ";
+                }
+            }
+        }
+
+    }
+    catch (err)
+    {
+        logger.Block("Error in removeEffect() " + err.message);
+    }
+}
+
+CSSWordAnimator.prototype.addSpanNodesAroundWords = function ()
+{
+    try
+    {
+        logger.LogToConsole("Applying CSS Animations. Total textnodes are : " + textNodes.length);
+
+        for (var i = 0; i < textNodes.length; i++)
+        {
+            logger.LogToConsole("Node : " + i + " is : '" + textNodes[i].textContent + "'");
+        }
+
+        for (var i = 0; i < textNodes.length; i++)
+        {
+            var node = textNodes[i];
+            var nodeSet = [];
+            for (var j = 0; j < wordsInTextNodes[i].length; j++)
+            {
+                var wordMeta = wordsInTextNodes[i][j];
+
+                var word = node.nodeValue.slice(wordMeta.position, wordMeta.position + wordMeta.length);
+
+                if (Math.random() > this.fractionToAnimate)
+                {
+                    var textNode = document.createTextNode(word + " ");
+                    nodeSet.push(textNode);
+                }
+                else
+                {
+                    var newSpanNode = this.addSpanAroundWord(word);
                     if (newSpanNode != null)
                     {
                         nodeSet.push(newSpanNode);
@@ -569,22 +1122,22 @@ CSSAnimator.prototype.addSpanNodes = function ()
     }
     catch (err)
     {
-        logger.Block("Error in : addSpanNodes!" + err.message);
+        logger.Block("Error in : addSpanNodesAroundWords!" + err.message);
     }
 }
 
-CSSAnimator.prototype.reset = function (sessionKey)
+CSSWordAnimator.prototype.reset = function (sessionKey)
 {
     try
     {
-        var mirroredNodes = document.getElementsByClassName("mirrorTheLetters");
+        var mirroredNodes = document.getElementsByClassName("reverseWords");
         for (var nodeNumber = mirroredNodes.length - 1; nodeNumber >= 0; nodeNumber--)
         {
             mirroredNodes[nodeNumber].innerText = mirroredNodes[nodeNumber].innerText.trim() + " ";
             mirroredNodes[nodeNumber].className = "";
         }
 
-        var listOfNodesAdded = document.getElementsByName(sessionKey);
+        var listOfNodesAdded = document.getElementsByName(this.sessionKey);
         logger.LogToConsole("Total nodes to be removed : " + listOfNodesAdded.length);
 
         for (var nodeNumber = listOfNodesAdded.length - 1; nodeNumber >= 0; nodeNumber--)
@@ -602,6 +1155,7 @@ CSSAnimator.prototype.reset = function (sessionKey)
 
             listOfNodesAdded[nodeNumber].remove();
         }
+        this.resetBodyToOriginalContent();
     }
     catch (err)
     {
@@ -611,12 +1165,120 @@ CSSAnimator.prototype.reset = function (sessionKey)
     this.currentCSS = "none";
 }
 
+/* SimilarShapedLettersAnimator class */
+function SimilarShapedLettersAnimator(sessionKey)
+{
+	this.generatedText = "";
+	this.fractionToAnimate = 0.6;
+	this.bpdq = "bpdq";
+	this.oec = "oec";
+}
+
+SimilarShapedLettersAnimator.prototype.resetBodyToOriginalContent = function()
+{
+	// This is called only once, when CSSAnimator is setup.
+	if(document.getElementsByTagName("body").length == 0)
+	{
+		Logger.Block("There is no body to resetHTML.");
+	}
+	document.getElementsByTagName("body")[0].innerHTML = originalHTMLContentOfBody;
+}
+
+SimilarShapedLettersAnimator.prototype.apply = function()
+{
+	if(this.generatedText === "")
+	{
+		this.resetBodyToOriginalContent();
+		this.generateText();
+		this.generatedText = document.getElementsByTagName("body")[0].innerHTML;
+	}
+	document.getElementsByTagName("body")[0].innerHTML = this.generatedText;
+}
+
+SimilarShapedLettersAnimator.prototype.generateText = function()
+{
+	try
+	{
+		var textNodes = domHelper.getTextNodesIn($("p, div, span"));
+
+		for(var i = 0;i<textNodes.length;i++)
+		{
+			var newNodeValue = "";
+
+			for(var j=0;j<textNodes[i].nodeValue.length;j++)
+			{
+				var originalLetter = textNodes[i].nodeValue[j];
+				if((this.bpdq.indexOf(originalLetter) > -1) || (this.oec.indexOf(originalLetter) > -1))
+				{
+					var newLetter = this.replaceLetter(originalLetter);
+					logger.LogToConsole(newLetter + " and " + originalLetter);
+					newNodeValue += newLetter;
+				}
+				else
+				{
+					newNodeValue += originalLetter;
+				}
+			}
+			textNodes[i].nodeValue = newNodeValue;
+		}
+	}
+    catch (err)
+    {
+        logger.Block("Error in : SimilarShapedLettersAnimator::generateText : " + err.message);
+    }	
+}
+
+SimilarShapedLettersAnimator.prototype.replaceLetter = function(letter)
+{
+	if(Math.random() > this.fractionToAnimate)
+	{
+		return letter;
+	}
+	else
+	{
+		switch(letter)
+		{
+			case 'b':
+			case 'p':
+			case 'd':
+			case 'q':
+			{
+				return this.bpdq[helper.getRandomInt(0, this.bpdq.length-1)];
+			}
+			case 'o':
+			case 'e':
+			case 'c':
+			{
+				return this.oec[helper.getRandomInt(0, this.oec.length-1)];
+			}
+		}
+	}
+}
+
+SimilarShapedLettersAnimator.prototype.remove = function ()
+{
+    try
+    {
+     	this.resetBodyToOriginalContent();
+    }
+    catch (err)
+    {
+        logger.Block("Error in : SimilarShapedLettersAnimator::remove : " + err.message);
+    }
+}
+
+
+
+
+
+
 try
 {
     var helper = new Helper();
     var sessionKey = helper.getRandomInt(0, 99999999);
-    var cssAnimator = new CSSAnimator(sessionKey);
-    var overlay = new Overlay();
+    var CSSWordAnimator = new CSSWordAnimator(sessionKey);
+    var CSSLetterAnimator = new CSSLetterAnimator(sessionKey);
+    var similarShapedLettersAnimator = new SimilarShapedLettersAnimator(sessionKey);
     var messenger = new Messenger(main /*handlerForMessagesFromBackground*/);
     var logger = new Logger();
     var domHelper = new DOMHelper();
@@ -666,6 +1328,13 @@ b) Spacing.
 c) Not working for some URLs on Edge
 
 11. Add - random bounce
+
+<div><button>Letters within a word keep shuffling.</button></div>
+<button><p>I have trouble between similar shaped letters.</p></button>
+<button><p>Some letters seem upside down.</p></button>
+<button><p>Some letters seem mirrored.<p></button>
+<button><p>Words jump out of place.</p></button>
+<button><p>Some words just pop out of place.<p></button>
 
 */
 
