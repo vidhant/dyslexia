@@ -2,106 +2,72 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="settings.css" />
+    <link rel="stylesheet" href="settings.css">
+    <script src="settings.js"></script>
 </head>
 <body>
-    <table>
-        <tr>
-            <td>
-                <button class="general clear" value="clear">Clear All</button>
-            </td>
-            <td>
-                <button class="general reset">Refresh (F5)</button>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <h2>mirrorTheLetters</h2>
-            </td>
-            <td>
-                <label class="switch">
-                    <input type="checkbox" value="mirrorTheLetters">
-                    <div class="slider round"></div>
-                </label>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <h2>upsideDown</h2>
-            </td>
-            <td>
-                <label class="switch">
-                    <input type="checkbox" value="upsideDown">
-                    <div class="slider round"></div>
-                </label>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <h2>blur</h2>
-            </td>
-            <td>
-                <label class="switch">
-                    <input type="checkbox" value="blur">
-                    <div class="slider round"></div>
-                </label>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <h2>zoom</h2>
-            </td>
-            <td>
-                <label class="switch">
-                    <input type="checkbox" value="zoom">
-                    <div class="slider round"></div>
-                </label>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <h2>zoomInZoomOut</h2>
-            </td>
-            <td>
-                <label class="switch">
-                    <input type="checkbox" value="zoomInZoomOut">
-                    <div class="slider round"></div>
-                </label>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <h2>bounce</h2>
-            </td>
-            <td>
-                <label class="switch">
-                    <input type="checkbox" value="bounce">
-                    <div class="slider round"></div>
-                </label>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <h2>bounceAndZoomInZoomOut</h2>
-            </td>
-            <td>
-                <label class="switch">
-                    <input type="checkbox" value="bounceAndZoomInZoomOut">
-                    <div class="slider round"></div>
-                </label>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <h2>Flicker</h2>
-            </td>
-            <td>
-                <label class="switch">
-                    <input type="checkbox" value="flicker">
-                    <div class="slider round"></div>
-                </label>
-            </td>
-        </tr>
-        <script src="settings.js"></script>
+
+<section>
+    <span class="text">Letters within a word keep shuffling.</span>
+    <div class="myCheckbox">
+        <input type="checkbox" value="shuffle" id="shuffle" name=""/>
+        <label for="shuffle" id="labelForShuffle"></label>
+    </div>
+</section>
+
+<section>
+    <span class="text">I have trouble between similar shaped letters.</span>
+    <div class="myCheckbox">
+        <input type="checkbox" value="similarShapedLetters" id="similarShapedLetters" name=""/>
+        <label for="similarShapedLetters" id="labelForSimilarShapedLetters"></label>
+    </div>
+</section>
+
+<section>
+    <span class="text">Some letters seem upside down.</span>
+    <div class="myCheckbox">
+        <input type="checkbox" value="upsideDownLetters" id="upsideDownLetters" name=""/>
+        <label for="upsideDownLetters" id="labelForUpsideDownLetters"></label>
+    </div>
+</section>
+
+<section>
+    <span class="text">Some letters seem mirrored.</span>
+    <div class="myCheckbox">
+        <input type="checkbox" value="mirroredLetters" id="mirroredLetters" name=""/>
+        <label for="mirroredLetters" id="labelForMirroredLetters"></label>
+    </div>
+</section>
+
+<section>
+    <span class="text">Some words are completely backwards.</span>
+    <div class="myCheckbox">
+        <input type="checkbox" value="reverseWords" id="reverseWords" name=""/>
+        <label for="reverseWords" id="labelForReverseWords"></label>
+    </div>
+</section>
+
+<section>
+    <span class="text">Some words just pop out of place.</span>
+    <div class="myCheckbox">
+        <input type="checkbox" value="poppingWords" id="poppingWords" name=""/>
+        <label for="poppingWords" id="labelForPoppingWords"></label>
+    </div>
+</section>
+
 </body>
 </html>
+
+
+
+<!-- 
+
+<div><button>Letters within a word keep shuffling.</button></div>
+<button><p>I have trouble between similar shaped letters.</p></button>
+<button><p>Some letters seem upside down.</p></button>
+<button><p>Some letters seem mirrored.<p></button>
+<button><p></p></button>
+<button><p>Some words just pop out of place.<p></button>
+
+
+-->
