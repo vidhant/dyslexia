@@ -3,7 +3,16 @@
     text-shadow: 0 0 1.5px rgba(0,0,0,0.5);
 }
 
-.mirrorTheLetters {
+.reverseWords {
+    transform: rotateY(180deg);
+    webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+    -o-transform: rotateY(180deg);
+    -ms-transform: rotateY(180deg);
+    unicode-bidi: bidi-override;
+}
+
+.mirroredLetters {
     transform: rotateY(180deg);
     webkit-transform: rotateY(180deg);
     -moz-transform: rotateY(180deg);
@@ -20,6 +29,16 @@
     -ms-transform: rotateX(180deg);
     unicode-bidi: bidi-override;
 }
+
+.upsideDownLetters {
+    transform: rotateX(180deg);
+    webkit-transform: rotateX(180deg);
+    -moz-transform: rotateX(180deg);
+    -o-transform: rotateX(180deg);
+    -ms-transform: rotateX(180deg);
+    unicode-bidi: bidi-override;
+}
+
 
 .zoom {
     -moz-transform: scale(1.03);
