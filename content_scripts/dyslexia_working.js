@@ -48,36 +48,60 @@ function main(request, sender, sendResponse)
 	        			{
 	        				wordJumbler.flicker();
 	        				currentMode = "shuffle";
+	        				sendResponse({ 
+				        			responseType: "statusResponse",
+				        			status: "Applied"
+				        	});
 	        				break;
 	        			}
 	        			case "similarShapedLetters":
 	        			{
 	        				CSSLetterAnimator.apply("");
 	        				currentMode = "similarShapedLetters";
+	        				sendResponse({ 
+				        			responseType: "statusResponse",
+				        			status: "Applied"
+				        	});	        				
 	        				break;
 	        			}
 	        			case "upsideDownLetters":
 	        			{
 							CSSLetterAnimator.apply("upsideDownLetters");
 							currentMode = "upsideDownLetters";
+	        				sendResponse({ 
+				        			responseType: "statusResponse",
+				        			status: "Applied"
+				        	});							
 	        				break;
 	        			}
 	        			case "mirroredLetters":
 	        			{
 							CSSLetterAnimator.apply("mirroredLetters");
 							currentMode = "mirroredLetters";
+	        				sendResponse({ 
+				        			responseType: "statusResponse",
+				        			status: "Applied"
+				        	});							
 	        				break;
 	        			}
 	        			case "reverseWords":
 	        			{
 							CSSWordAnimator.apply("reverseWords");
 							currentMode="reverseWords";
+	        				sendResponse({ 
+				        			responseType: "statusResponse",
+				        			status: "Applied"
+				        	});							
 	        				break;
 	        			}
 	        			case "poppingWords":
 	        			{
 							CSSWordAnimator.apply("bounceAndZoomInZoomOut");
 							currentMode="poppingWords";
+	        				sendResponse({ 
+				        			responseType: "statusResponse",
+				        			status: "Applied"
+				        	});							
 	        				break;
 	        			}
 	        			default:
@@ -96,35 +120,59 @@ function main(request, sender, sendResponse)
         			{
         				wordJumbler.stop();
         				currentMode = "";
+        				sendResponse({ 
+			        			responseType: "statusResponse",
+			        			status: "Removed"
+			        	});
         				break;
         			}
         			case "similarShapedLetters":
         			{
         				currentMode = "";
+        				sendResponse({ 
+			        			responseType: "statusResponse",
+			        			status: "Removed"
+			        	});        				
         				break;
         			}
         			case "upsideDownLetters":
         			{
 						CSSLetterAnimator.remove("upsideDownLetters");
         				currentMode = "";
+        				sendResponse({ 
+			        			responseType: "statusResponse",
+			        			status: "Removed"
+			        	});        				
         				break;
         			}
         			case "mirroredLetters":
         			{
 						CSSLetterAnimator.remove("mirroredLetters");
         				currentMode = "";
+        				sendResponse({ 
+			        			responseType: "statusResponse",
+			        			status: "Removed"
+			        	});        				
         				break;
         			}
         			case "reverseWords":
         			{
 						CSSWordAnimator.remove("reverseWords");
         				currentMode = "";
+        				sendResponse({ 
+			        			responseType: "statusResponse",
+			        			status: "Removed"
+			        	});        				
         				break;
         			}
         			case "poppingWords":
         			{
 						CSSWordAnimator.remove("bounceAndZoomInZoomOut");
         				currentMode = "";
+        				sendResponse({ 
+			        			responseType: "statusResponse",
+			        			status: "Removed"
+			        	});        				
         				break;
         			}
         			default:
@@ -148,7 +196,6 @@ function main(request, sender, sendResponse)
         var end = new Date().getTime();
         var time = end - start;
         console.log('Execution time for (mode, time): ' + request.type + " " + time);
-        sendResponse({ actionTaken: "nothing", time: time, requestedAction: "" });
     }
     catch (err)
     {

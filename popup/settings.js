@@ -17,6 +17,8 @@ function Messenger(handleMessagesFromContentScript)
 {
     this.registerHandler(handleMessagesFromContentScript);
     this.messageHandler = new MessageHandlers();
+    this.sentMessages = 0;
+    this.receivedResponses = 0;
 }
 
 Messenger.prototype.registerHandler = function (handler)
@@ -36,6 +38,51 @@ Messenger.prototype.handleError = function (error)
     alert(`Error in sending message to CS: ${error}`);
 }
 
+Messenger.prototype.messageSent = function()
+{
+    try
+    {
+        this.sentMessages++;
+        document.getElementById("status").innerHTML = "Busy";
+    }
+    catch (err)
+    {
+        alert("Error in : Sending Message To CS!" + err.message);
+    }
+}
+
+Messenger.prototype.responseReceived = function()
+{
+    this.receivedResponses++;
+    if(this.receivedResponses === this.sentMessages)
+    {
+        document.getElementById("status").innerHTML = "Ready";
+    }
+}
+
+/* Sends messages to CS */
+Messenger.prototype.sendMessageToContentScript = function (json)
+{
+    try
+    {
+        var self = this;
+        var gettingActiveTab = browser.tabs.query({ active: true, currentWindow: true }, function (tabs)
+        {
+            self.messageSent();
+
+            var sending = browser.tabs.sendMessage(tabs[0].id, json, function (incomingMessage)
+            {
+                self.responseReceived();
+                self.messageHandler.handleMessage(incomingMessage);
+            });
+        });
+    }
+    catch (err)
+    {
+        alert("Error in : Sending Message To CS!" + err.message);
+    }
+}
+
 function MessageHandlers()
 {
 }
@@ -45,10 +92,11 @@ MessageHandlers.prototype.handleResponseToGetCurrentMode = function (incomingMes
     try
     {
         var currentMode = incomingMessage.currentMode;
-        if(currentMode!="none")
+        if(currentMode!="")
         {
             uiController.turnSwitchOnById(currentMode);
         }
+        document.getElementById("status").innerHTML = "Ready";
     }
     catch (err)
     {
@@ -141,26 +189,6 @@ MessageHandlers.prototype.handleResponseToRemoveCSS = function (incomingMessage)
     }
 }
 
-/* Sends messages to CS */
-Messenger.prototype.sendMessageToContentScript = function (json)
-{
-    try
-    {
-        var self = this;
-        var gettingActiveTab = browser.tabs.query({ active: true, currentWindow: true }, function (tabs)
-        {
-            var sending = browser.tabs.sendMessage(tabs[0].id, json, function (incomingMessage)
-            {
-                self.messageHandler.handleMessage(incomingMessage);
-            });
-        });
-    }
-    catch (err)
-    {
-        alert("Error in : Sending Message To CS!" + err.message);
-    }
-}
-
 MessageHandlers.prototype.handleMessage = function (incomingMessage)
 {
     try
@@ -209,8 +237,12 @@ MessageHandlers.prototype.handleMessage = function (incomingMessage)
                     this.handleResponseToRemoveCSS(incomingMessage);
                     break;
                 }
+                case "statusResponse":
+                {
+                    //document.getElementById("status").innerHTML = incomingMessage.status;
+                    break;
+                }
             }
-
         }
     }
     catch (err)
@@ -253,6 +285,7 @@ UIController.prototype.turnSwitchOnById = function(id)
 
 UIController.prototype.turnSwitchOn = function(checkbox)
 {
+    //document.getElementById("status").innerHTML = "Applying effect.";
     messenger.sendMessageToContentScript({ type: "applyMode", mode:  checkbox.id});
     var labelID = "labelFor" + checkbox.id.charAt(0).toUpperCase() + checkbox.id.slice(1);
     var label = document.getElementById(labelID);
@@ -262,6 +295,7 @@ UIController.prototype.turnSwitchOn = function(checkbox)
 
 UIController.prototype.turnSwitchOff = function(checkbox)
 {
+    //document.getElementById("status").innerHTML = "Removing effect.";
     messenger.sendMessageToContentScript({ type: "removeMode", mode:  checkbox.id});
     var labelID = "labelFor" + checkbox.id.charAt(0).toUpperCase() + checkbox.id.slice(1);
     var label = document.getElementById(labelID);
