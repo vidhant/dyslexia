@@ -23,176 +23,183 @@ function main(request, sender, sendResponse)
     {
         var start = new Date().getTime();
 
-        if(originalHTMLContentOfBody === undefined)
+        if (originalHTMLContentOfBody === undefined)
         {
-        	originalHTMLContentOfBody = document.getElementsByTagName("body")[0].innerHTML;
+            originalHTMLContentOfBody = document.getElementsByTagName("body")[0].innerHTML;
         }
 
-        if(originalTextContentOfBody === undefined)
+        if (originalTextContentOfBody === undefined)
         {
-        	originalTextContentOfBody = document.getElementsByTagName("body")[0].innerText;
-        }        
+            originalTextContentOfBody = document.getElementsByTagName("body")[0].innerText;
+        }
 
-        switch(request.type)
+        switch (request.type)
         {
-        	case "getCurrentMode":
-        	{
-        		sendResponse({ 
-        			responseType: "responseToGetCurrentMode",
-        			currentMode: currentMode
-        		});
-            	break;
-        	}
-        	case "applyMode":
-        	{
-        		if(request.mode != currentMode)
-        		{
-	        		switch(request.mode)
-	        		{
-	        			case "shuffle":
-	        			{
-	        				wordJumbler.flicker();
-	        				currentMode = "shuffle";
-	        				sendResponse({ 
-				        			responseType: "statusResponse",
-				        			status: "Applied"
-				        	});
-	        				break;
-	        			}
-	        			case "similarShapedLetters":
-	        			{
-	        				similarShapedLettersAnimator.apply();
-	        				currentMode = "similarShapedLetters";
-	        				sendResponse({ 
-				        			responseType: "statusResponse",
-				        			status: "Applied"
-				        	});	        				
-	        				break;
-	        			}
-	        			case "upsideDownLetters":
-	        			{
-							CSSLetterAnimator.apply("upsideDownLetters");
-							currentMode = "upsideDownLetters";
-	        				sendResponse({ 
-				        			responseType: "statusResponse",
-				        			status: "Applied"
-				        	});							
-	        				break;
-	        			}
-	        			case "mirroredLetters":
-	        			{
-							CSSLetterAnimator.apply("mirroredLetters");
-							currentMode = "mirroredLetters";
-	        				sendResponse({ 
-				        			responseType: "statusResponse",
-				        			status: "Applied"
-				        	});							
-	        				break;
-	        			}
-	        			case "reverseWords":
-	        			{
-							CSSWordAnimator.apply("reverseWords");
-							currentMode="reverseWords";
-	        				sendResponse({ 
-				        			responseType: "statusResponse",
-				        			status: "Applied"
-				        	});							
-	        				break;
-	        			}
-	        			case "poppingWords":
-	        			{
-							CSSWordAnimator.apply("bounceAndZoomInZoomOut");
-							currentMode="poppingWords";
-	        				sendResponse({ 
-				        			responseType: "statusResponse",
-				        			status: "Applied"
-				        	});							
-	        				break;
-	        			}
-	        			default:
-	        			{
-	        				break;
-	        			}            			    			        			
-	        		}
-        		}
-        		break;
-        	}
-        	case "removeMode":
-        	{
-        		switch(request.mode)
-        		{
-        			case "shuffle":
-        			{
-        				wordJumbler.stop();
-        				currentMode = "";
-        				sendResponse({ 
-			        			responseType: "statusResponse",
-			        			status: "Removed"
-			        	});
-        				break;
-        			}
-        			case "similarShapedLetters":
-        			{
-        				similarShapedLettersAnimator.remove();
-        				sendResponse({ 
-			        			responseType: "statusResponse",
-			        			status: "Removed"
-			        	});        				
-        				break;
-        			}
-        			case "upsideDownLetters":
-        			{
-						CSSLetterAnimator.remove("upsideDownLetters");
-        				currentMode = "";
-        				sendResponse({ 
-			        			responseType: "statusResponse",
-			        			status: "Removed"
-			        	});        				
-        				break;
-        			}
-        			case "mirroredLetters":
-        			{
-						CSSLetterAnimator.remove("mirroredLetters");
-        				currentMode = "";
-        				sendResponse({ 
-			        			responseType: "statusResponse",
-			        			status: "Removed"
-			        	});        				
-        				break;
-        			}
-        			case "reverseWords":
-        			{
-						CSSWordAnimator.remove("reverseWords");
-        				currentMode = "";
-        				sendResponse({ 
-			        			responseType: "statusResponse",
-			        			status: "Removed"
-			        	});        				
-        				break;
-        			}
-        			case "poppingWords":
-        			{
-						CSSWordAnimator.remove("bounceAndZoomInZoomOut");
-        				currentMode = "";
-        				sendResponse({ 
-			        			responseType: "statusResponse",
-			        			status: "Removed"
-			        	});        				
-        				break;
-        			}
-        			default:
-        			{
+            case "getCurrentMode":
+                {
+                    sendResponse({
+                        responseType: "responseToGetCurrentMode",
+                        currentMode: currentMode
+                    });
+                    break;
+                }
+            case "applyMode":
+                {
+                    if (request.mode != currentMode)
+                    {
+                        switch (request.mode)
+                        {
+                            case "shuffle":
+                                {
+                                    wordJumbler.flicker();
+                                    currentMode = "shuffle";
+                                    sendResponse({
+                                        responseType: "statusResponse",
+                                        status: "Applied"
+                                    });
+                                    break;
+                                }
+                            case "similarShapedLetters":
+                                {
+                                    similarShapedLettersAnimator.apply();
+                                    currentMode = "similarShapedLetters";
+                                    sendResponse({
+                                        responseType: "statusResponse",
+                                        status: "Applied"
+                                    });
+                                    break;
+                                }
+                            case "upsideDownLetters":
+                                {
+                                    CSSLetterAnimator.apply("upsideDownLetters");
+                                    currentMode = "upsideDownLetters";
+                                    sendResponse({
+                                        responseType: "statusResponse",
+                                        status: "Applied"
+                                    });
+                                    break;
+                                }
+                            case "mirroredLetters":
+                                {
+                                    CSSLetterAnimator.apply("mirroredLetters");
+                                    currentMode = "mirroredLetters";
+                                    sendResponse({
+                                        responseType: "statusResponse",
+                                        status: "Applied"
+                                    });
+                                    break;
+                                }
+                            case "reverseWords":
+                                {
+                                    CSSWordAnimator.apply("reverseWords");
+                                    currentMode = "reverseWords";
+                                    sendResponse({
+                                        responseType: "statusResponse",
+                                        status: "Applied"
+                                    });
+                                    break;
+                                }
+                            case "poppingWords":
+                                {
+                                    CSSWordAnimator.apply("bounceAndZoomInZoomOut");
+                                    currentMode = "poppingWords";
+                                    sendResponse({
+                                        responseType: "statusResponse",
+                                        status: "Applied"
+                                    });
+                                    break;
+                                }
+                            default:
+                                {
+                                    break;
+                                }
+                        }
+                    }
+                    else
+                    {
+                        sendResponse({
+                            responseType: "statusResponse",
+                            status: "Applied"
+                        });
+                    }
+                    break;
+                }
+            case "removeMode":
+                {
+                    switch (request.mode)
+                    {
+                        case "shuffle":
+                            {
+                                wordJumbler.stop();
+                                currentMode = "";
+                                sendResponse({
+                                    responseType: "statusResponse",
+                                    status: "Removed"
+                                });
+                                break;
+                            }
+                        case "similarShapedLetters":
+                            {
+                                similarShapedLettersAnimator.remove();
+                                sendResponse({
+                                    responseType: "statusResponse",
+                                    status: "Removed"
+                                });
+                                break;
+                            }
+                        case "upsideDownLetters":
+                            {
+                                CSSLetterAnimator.remove("upsideDownLetters");
+                                currentMode = "";
+                                sendResponse({
+                                    responseType: "statusResponse",
+                                    status: "Removed"
+                                });
+                                break;
+                            }
+                        case "mirroredLetters":
+                            {
+                                CSSLetterAnimator.remove("mirroredLetters");
+                                currentMode = "";
+                                sendResponse({
+                                    responseType: "statusResponse",
+                                    status: "Removed"
+                                });
+                                break;
+                            }
+                        case "reverseWords":
+                            {
+                                CSSWordAnimator.remove("reverseWords");
+                                currentMode = "";
+                                sendResponse({
+                                    responseType: "statusResponse",
+                                    status: "Removed"
+                                });
+                                break;
+                            }
+                        case "poppingWords":
+                            {
+                                CSSWordAnimator.remove("bounceAndZoomInZoomOut");
+                                currentMode = "";
+                                sendResponse({
+                                    responseType: "statusResponse",
+                                    status: "Removed"
+                                });
+                                break;
+                            }
+                        default:
+                            {
 
 
-        				break;
-        			}            			    			        			
-        		}
-        		break;
-        	}
-        	default:
-        	{
-	            break;
-        	}
+                                break;
+                            }
+                    }
+                    break;
+                }
+            default:
+                {
+                    break;
+                }
 
         }
 
@@ -265,14 +272,14 @@ DOMHelper.prototype.getTextNodesIn = function (el)
     });
 }
 
-DOMHelper.prototype.getCopyOfCurrentBodyNode = function()
+DOMHelper.prototype.getCopyOfCurrentBodyNode = function ()
 {
     var bodyTags = document.getElementsByTagName("body");
     var clonedBody = (bodyTags.length != 0) ? bodyTags[0].cloneNode(false) : undefined;
 
-    if(clonedBody === undefined)
+    if (clonedBody === undefined)
     {
-    	Logger.Block("Can't clone the body");
+        Logger.Block("Can't clone the body");
     }
     return clonedBody;
 }
@@ -310,14 +317,14 @@ function WordJumbler()
     this.isActive = false;
 }
 
-WordJumbler.prototype.resetBodyToOriginalContent = function()
+WordJumbler.prototype.resetBodyToOriginalContent = function ()
 {
-	// This is called only once, when CSSAnimator is setup.
-	if(document.getElementsByTagName("body").length == 0)
-	{
-		Logger.Block("There is no body to resetHTML.");
-	}
-	document.getElementsByTagName("body")[0].innerHTML = originalHTMLContentOfBody;
+    // This is called only once, when CSSAnimator is setup.
+    if (document.getElementsByTagName("body").length == 0)
+    {
+        Logger.Block("There is no body to resetHTML.");
+    }
+    document.getElementsByTagName("body")[0].innerHTML = originalHTMLContentOfBody;
 }
 
 WordJumbler.prototype.stop = function ()
@@ -331,7 +338,7 @@ WordJumbler.prototype.flicker = function ()
 {
     try
     {
-    	this.resetBodyToOriginalContent();
+        this.resetBodyToOriginalContent();
         logger.LogToConsole("Flicker called!!");
         var textNodes;
         var wordsInTextNodes = [];
@@ -480,24 +487,24 @@ CSSLetterAnimator.prototype.setup = function ()
     this.initialize = false;
 }
 
-CSSLetterAnimator.prototype.resetBodyToOriginalContent = function()
+CSSLetterAnimator.prototype.resetBodyToOriginalContent = function ()
 {
-	// This is called only once, when CSSAnimator is setup.
-	if(document.getElementsByTagName("body").length == 0)
-	{
-		Logger.Block("There is no body to resetHTML.");
-	}
-	document.getElementsByTagName("body")[0].innerHTML = originalHTMLContentOfBody;
+    // This is called only once, when CSSAnimator is setup.
+    if (document.getElementsByTagName("body").length == 0)
+    {
+        Logger.Block("There is no body to resetHTML.");
+    }
+    document.getElementsByTagName("body")[0].innerHTML = originalHTMLContentOfBody;
 }
 
-CSSLetterAnimator.prototype.resetBodyToContentWithSpans = function()
+CSSLetterAnimator.prototype.resetBodyToContentWithSpans = function ()
 {
-	// This is called only once, when CSSAnimator is setup.
-	if(document.getElementsByTagName("body").length == 0)
-	{
-		Logger.Block("There is no body to resetBodyToContentWithSpans.");
-	}
-	document.getElementsByTagName("body")[0].innerHTML = this.innerHTMLWithSpans;
+    // This is called only once, when CSSAnimator is setup.
+    if (document.getElementsByTagName("body").length == 0)
+    {
+        Logger.Block("There is no body to resetBodyToContentWithSpans.");
+    }
+    document.getElementsByTagName("body")[0].innerHTML = this.innerHTMLWithSpans;
 }
 
 
@@ -706,39 +713,39 @@ CSSLetterAnimator.prototype.addSpanNodesAroundLetters = function ()
                 }
                 else
                 {
-                	var doneUpto = -1;
-                	for(var k=0;k<word.length;k++)
-                	{
-        		        if (Math.random() > this.fractionOfLettersToAnimate)
-		                {
-		                    continue;
-		                }
-		                else
-		                {
-		                	var textNodeBefore = document.createTextNode(word.slice(doneUpto + 1, k));
-		                	nodeSet.push(textNodeBefore);
-		                	var newSpanNode = this.addSpanAroundLetter(word[k]);
-		                    if (newSpanNode != null)
-		                    {
-		                        nodeSet.push(newSpanNode);
-		                    }
-		                    else
-		                    {
-		                        var textNode = document.createTextNode(word[k]);
-		                        nodeSet.push(textNode);
-		                    }
-		                    doneUpto = k;
-		                    if(k==0)
-		                    {
+                    var doneUpto = -1;
+                    for (var k = 0; k < word.length; k++)
+                    {
+                        if (Math.random() > this.fractionOfLettersToAnimate)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            var textNodeBefore = document.createTextNode(word.slice(doneUpto + 1, k));
+                            nodeSet.push(textNodeBefore);
+                            var newSpanNode = this.addSpanAroundLetter(word[k]);
+                            if (newSpanNode != null)
+                            {
+                                nodeSet.push(newSpanNode);
+                            }
+                            else
+                            {
+                                var textNode = document.createTextNode(word[k]);
+                                nodeSet.push(textNode);
+                            }
+                            doneUpto = k;
+                            if (k == 0)
+                            {
 
-		                    }
-		                }
-                	}
+                            }
+                        }
+                    }
 
-                	if(doneUpto + 1 != word.length)
-                	{
-                		nodeSet.push(document.createTextNode(word.slice(doneUpto + 1, word.length)));
-                	}
+                    if (doneUpto + 1 != word.length)
+                    {
+                        nodeSet.push(document.createTextNode(word.slice(doneUpto + 1, word.length)));
+                    }
                 }
             };
 
@@ -830,7 +837,7 @@ CSSLetterAnimator.prototype.reset = function (sessionKey)
 /* CSSWordAnimator class */
 function CSSWordAnimator(sessionKey)
 {
-    this.sessionKey = sessionKey  + "addedByWA";
+    this.sessionKey = sessionKey + "addedByWA";
     this.initialize = true;
     this.IsOn = true;
     this.textNodes = null;
@@ -851,24 +858,24 @@ CSSWordAnimator.prototype.setup = function ()
     this.initialize = false;
 }
 
-CSSWordAnimator.prototype.resetBodyToOriginalContent = function()
+CSSWordAnimator.prototype.resetBodyToOriginalContent = function ()
 {
-	// This is called only once, when CSSAnimator is setup.
-	if(document.getElementsByTagName("body").length == 0)
-	{
-		Logger.Block("There is no body to resetHTML.");
-	}
-	document.getElementsByTagName("body")[0].innerHTML = originalHTMLContentOfBody;
+    // This is called only once, when CSSAnimator is setup.
+    if (document.getElementsByTagName("body").length == 0)
+    {
+        Logger.Block("There is no body to resetHTML.");
+    }
+    document.getElementsByTagName("body")[0].innerHTML = originalHTMLContentOfBody;
 }
 
-CSSWordAnimator.prototype.resetBodyToContentWithSpans = function()
+CSSWordAnimator.prototype.resetBodyToContentWithSpans = function ()
 {
-	// This is called only once, when CSSAnimator is setup.
-	if(document.getElementsByTagName("body").length == 0)
-	{
-		Logger.Block("There is no body to resetBodyToContentWithSpans.");
-	}
-	document.getElementsByTagName("body")[0].innerHTML = this.innerHTMLWithSpans;
+    // This is called only once, when CSSAnimator is setup.
+    if (document.getElementsByTagName("body").length == 0)
+    {
+        Logger.Block("There is no body to resetBodyToContentWithSpans.");
+    }
+    document.getElementsByTagName("body")[0].innerHTML = this.innerHTMLWithSpans;
 }
 
 CSSWordAnimator.prototype.theCurrentCSS = function ()
@@ -1168,98 +1175,98 @@ CSSWordAnimator.prototype.reset = function (sessionKey)
 /* SimilarShapedLettersAnimator class */
 function SimilarShapedLettersAnimator(sessionKey)
 {
-	this.generatedText = "";
-	this.fractionToAnimate = 0.6;
-	this.bpdq = "bpdq";
-	this.oec = "oec";
+    this.generatedText = "";
+    this.fractionToAnimate = 0.6;
+    this.bpdq = "bpdq";
+    this.oec = "oec";
 }
 
-SimilarShapedLettersAnimator.prototype.resetBodyToOriginalContent = function()
+SimilarShapedLettersAnimator.prototype.resetBodyToOriginalContent = function ()
 {
-	// This is called only once, when CSSAnimator is setup.
-	if(document.getElementsByTagName("body").length == 0)
-	{
-		Logger.Block("There is no body to resetHTML.");
-	}
-	document.getElementsByTagName("body")[0].innerHTML = originalHTMLContentOfBody;
+    // This is called only once, when CSSAnimator is setup.
+    if (document.getElementsByTagName("body").length == 0)
+    {
+        Logger.Block("There is no body to resetHTML.");
+    }
+    document.getElementsByTagName("body")[0].innerHTML = originalHTMLContentOfBody;
 }
 
-SimilarShapedLettersAnimator.prototype.apply = function()
+SimilarShapedLettersAnimator.prototype.apply = function ()
 {
-	if(this.generatedText === "")
-	{
-		this.resetBodyToOriginalContent();
-		this.generateText();
-		this.generatedText = document.getElementsByTagName("body")[0].innerHTML;
-	}
-	document.getElementsByTagName("body")[0].innerHTML = this.generatedText;
+    if (this.generatedText === "")
+    {
+        this.resetBodyToOriginalContent();
+        this.generateText();
+        this.generatedText = document.getElementsByTagName("body")[0].innerHTML;
+    }
+    document.getElementsByTagName("body")[0].innerHTML = this.generatedText;
 }
 
-SimilarShapedLettersAnimator.prototype.generateText = function()
+SimilarShapedLettersAnimator.prototype.generateText = function ()
 {
-	try
-	{
-		var textNodes = domHelper.getTextNodesIn($("p, div, span"));
+    try
+    {
+        var textNodes = domHelper.getTextNodesIn($("p, div, span"));
 
-		for(var i = 0;i<textNodes.length;i++)
-		{
-			var newNodeValue = "";
+        for (var i = 0; i < textNodes.length; i++)
+        {
+            var newNodeValue = "";
 
-			for(var j=0;j<textNodes[i].nodeValue.length;j++)
-			{
-				var originalLetter = textNodes[i].nodeValue[j];
-				if((this.bpdq.indexOf(originalLetter) > -1) || (this.oec.indexOf(originalLetter) > -1))
-				{
-					var newLetter = this.replaceLetter(originalLetter);
-					logger.LogToConsole(newLetter + " and " + originalLetter);
-					newNodeValue += newLetter;
-				}
-				else
-				{
-					newNodeValue += originalLetter;
-				}
-			}
-			textNodes[i].nodeValue = newNodeValue;
-		}
-	}
+            for (var j = 0; j < textNodes[i].nodeValue.length; j++)
+            {
+                var originalLetter = textNodes[i].nodeValue[j];
+                if ((this.bpdq.indexOf(originalLetter) > -1) || (this.oec.indexOf(originalLetter) > -1))
+                {
+                    var newLetter = this.replaceLetter(originalLetter);
+                    logger.LogToConsole(newLetter + " and " + originalLetter);
+                    newNodeValue += newLetter;
+                }
+                else
+                {
+                    newNodeValue += originalLetter;
+                }
+            }
+            textNodes[i].nodeValue = newNodeValue;
+        }
+    }
     catch (err)
     {
         logger.Block("Error in : SimilarShapedLettersAnimator::generateText : " + err.message);
-    }	
+    }
 }
 
-SimilarShapedLettersAnimator.prototype.replaceLetter = function(letter)
+SimilarShapedLettersAnimator.prototype.replaceLetter = function (letter)
 {
-	if(Math.random() > this.fractionToAnimate)
-	{
-		return letter;
-	}
-	else
-	{
-		switch(letter)
-		{
-			case 'b':
-			case 'p':
-			case 'd':
-			case 'q':
-			{
-				return this.bpdq[helper.getRandomInt(0, this.bpdq.length-1)];
-			}
-			case 'o':
-			case 'e':
-			case 'c':
-			{
-				return this.oec[helper.getRandomInt(0, this.oec.length-1)];
-			}
-		}
-	}
+    if (Math.random() > this.fractionToAnimate)
+    {
+        return letter;
+    }
+    else
+    {
+        switch (letter)
+        {
+            case 'b':
+            case 'p':
+            case 'd':
+            case 'q':
+                {
+                    return this.bpdq[helper.getRandomInt(0, this.bpdq.length - 1)];
+                }
+            case 'o':
+            case 'e':
+            case 'c':
+                {
+                    return this.oec[helper.getRandomInt(0, this.oec.length - 1)];
+                }
+        }
+    }
 }
 
 SimilarShapedLettersAnimator.prototype.remove = function ()
 {
     try
     {
-     	this.resetBodyToOriginalContent();
+        this.resetBodyToOriginalContent();
     }
     catch (err)
     {

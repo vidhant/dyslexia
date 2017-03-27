@@ -38,7 +38,7 @@ Messenger.prototype.handleError = function (error)
     alert(`Error in sending message to CS: ${error}`);
 }
 
-Messenger.prototype.messageSent = function()
+Messenger.prototype.messageSent = function ()
 {
     try
     {
@@ -52,10 +52,10 @@ Messenger.prototype.messageSent = function()
     }
 }
 
-Messenger.prototype.responseReceived = function()
+Messenger.prototype.responseReceived = function ()
 {
     this.receivedResponses++;
-    if(this.receivedResponses === this.sentMessages)
+    if (this.receivedResponses === this.sentMessages)
     {
         document.getElementById("status").innerHTML = "<span class='ready'>Ready<span>";
         overlay.hideOverlay();
@@ -94,7 +94,7 @@ MessageHandlers.prototype.handleResponseToGetCurrentMode = function (incomingMes
     try
     {
         var currentMode = incomingMessage.currentMode;
-        if(currentMode!="")
+        if (currentMode != "")
         {
             uiController.turnSwitchOnById(currentMode);
         }
@@ -195,55 +195,55 @@ MessageHandlers.prototype.handleMessage = function (incomingMessage)
 {
     try
     {
-        if(incomingMessage != undefined)
+        if (incomingMessage != undefined)
         {
-            switch(incomingMessage.responseType)
+            switch (incomingMessage.responseType)
             {
                 case "responseToGetCurrentMode":
-                {
-                    this.handleResponseToGetCurrentMode(incomingMessage);
-                    break;
-                }
+                    {
+                        this.handleResponseToGetCurrentMode(incomingMessage);
+                        break;
+                    }
                 case "responseToRequestJumblingInformation":
-                {
-                    this.handleResponseToRequestJumblingInformation(incomingMessage);
-                    break;
-                }
+                    {
+                        this.handleResponseToRequestJumblingInformation(incomingMessage);
+                        break;
+                    }
                 case "responseToSetJumbling":
-                {
-                    this.handleResponseToSetJumbling(incomingMessage);
-                    break;
-                }
+                    {
+                        this.handleResponseToSetJumbling(incomingMessage);
+                        break;
+                    }
                 case "responseToSetJumblingInterval":
-                {
-                    this.handleResponseToSetJumblingInterval(incomingMessage);
-                    break;
-                }
+                    {
+                        this.handleResponseToSetJumblingInterval(incomingMessage);
+                        break;
+                    }
                 case "responseToSetJumblingFraction":
-                {
-                    this.handleResponseToSetJumblingFraction(incomingMessage);
-                    break;
-                }
+                    {
+                        this.handleResponseToSetJumblingFraction(incomingMessage);
+                        break;
+                    }
                 case "responseToRequestCSSInformation":
-                {
-                    this.handleResponseToRequestCSSInformation(incomingMessage);
-                    break;
-                }
+                    {
+                        this.handleResponseToRequestCSSInformation(incomingMessage);
+                        break;
+                    }
                 case "responseToApplyCSS":
-                {
-                    this.handleResponseToApplyCSS(incomingMessage);
-                    break;
-                }
+                    {
+                        this.handleResponseToApplyCSS(incomingMessage);
+                        break;
+                    }
                 case "responseToRemoveCSS":
-                {
-                    this.handleResponseToRemoveCSS(incomingMessage);
-                    break;
-                }
+                    {
+                        this.handleResponseToRemoveCSS(incomingMessage);
+                        break;
+                    }
                 case "statusResponse":
-                {
-                    //document.getElementById("status").innerHTML = incomingMessage.status;
-                    break;
-                }
+                    {
+                        //document.getElementById("status").innerHTML = incomingMessage.status;
+                        break;
+                    }
             }
         }
     }
@@ -266,53 +266,53 @@ function UIController()
 
 }
 
-UIController.prototype.initialize = function()
+UIController.prototype.initialize = function ()
 {
     this.reset();
 }
 
-UIController.prototype.reset = function()
+UIController.prototype.reset = function ()
 {
-    
+
 }
 
-UIController.prototype.turnSwitchOnById = function(id)
+UIController.prototype.turnSwitchOnById = function (id)
 {
     var checkbox = document.getElementById(id);
-    if(checkbox!=undefined)
+    if (checkbox != undefined)
     {
         this.turnSwitchOn(checkbox);
     }
 }
 
-UIController.prototype.turnSwitchOn = function(checkbox)
+UIController.prototype.turnSwitchOn = function (checkbox)
 {
     //document.getElementById("status").innerHTML = "Applying effect.";
-    messenger.sendMessageToContentScript({ type: "applyMode", mode:  checkbox.id});
+    messenger.sendMessageToContentScript({ type: "applyMode", mode: checkbox.id });
     var labelID = "labelFor" + checkbox.id.charAt(0).toUpperCase() + checkbox.id.slice(1);
     var label = document.getElementById(labelID);
     this.addCSSToLabel(label);
     checkbox.checked = true;
 }
 
-UIController.prototype.turnSwitchOff = function(checkbox)
+UIController.prototype.turnSwitchOff = function (checkbox)
 {
     //document.getElementById("status").innerHTML = "Removing effect.";
-    messenger.sendMessageToContentScript({ type: "removeMode", mode:  checkbox.id});
+    messenger.sendMessageToContentScript({ type: "removeMode", mode: checkbox.id });
     var labelID = "labelFor" + checkbox.id.charAt(0).toUpperCase() + checkbox.id.slice(1);
     var label = document.getElementById(labelID);
     this.resetCSSForLabel(label);
     checkbox.checked = false;
 }
 
-UIController.prototype.turnOffAllSwitchesExcept = function(checkbox)
+UIController.prototype.turnOffAllSwitchesExcept = function (checkbox)
 {
     var options = document.getElementsByTagName("input");
     for (var i = 0; i < options.length; i++)
     {
-        if(options[i].checked === true)
+        if (options[i].checked === true)
         {
-            if(checkbox != undefined && checkbox != null && options[i].id === checkbox.id)
+            if (checkbox != undefined && checkbox != null && options[i].id === checkbox.id)
             {
                 continue;
             }
@@ -321,8 +321,8 @@ UIController.prototype.turnOffAllSwitchesExcept = function(checkbox)
     }
 }
 
-UIController.prototype.switchToggled = function(checkbox)
-{    
+UIController.prototype.switchToggled = function (checkbox)
+{
     if (checkbox.checked === true)
     {
         this.turnOffAllSwitchesExcept(checkbox);
@@ -334,7 +334,7 @@ UIController.prototype.switchToggled = function(checkbox)
     }
 }
 
-$(document).on('change', 'input[type=checkbox]', function(e)
+$(document).on('change', 'input[type=checkbox]', function (e)
 {
     try
     {
@@ -346,16 +346,16 @@ $(document).on('change', 'input[type=checkbox]', function(e)
     }
 });
 
-UIController.prototype.addCSSToLabel = function(label)
+UIController.prototype.addCSSToLabel = function (label)
 {
-    label.style.background="#26ca28";
-    label.style.left= "60px";
+    label.style.background = "#26ca28";
+    label.style.left = "60px";
 }
 
-UIController.prototype.resetCSSForLabel = function(label)
+UIController.prototype.resetCSSForLabel = function (label)
 {
-    label.style.background="#e50d0d";
-    label.style.left= "12px";
+    label.style.background = "#e50d0d";
+    label.style.left = "12px";
 }
 
 /* Overlay class */
@@ -388,8 +388,3 @@ function initialize()
 {
     messenger.sendMessageToContentScript({ type: "getCurrentMode" });
 }
-
-
-
-
-
